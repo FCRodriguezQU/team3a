@@ -130,20 +130,38 @@ public class Sprite extends Object {
      * @param boundHeadX - x position of this bound
      * @param boundHeadY - y position of this bound
      ******************************************************************************/
-    public void setMultBounds(int BoundSize, int boundLegX, int boundLegY, int boundLeftX, int boundLeftY, int boundRightX, int boundRightY, int boundHeadX, int boundHeadY) {
+    public void setMultBounds(int BoundSize, int boundLegX, int boundLegY, int boundLeftX, int boundLeftY, int boundRightX, int boundRightY, int boundHeadX, int boundHeadY) 
+    {
+    	// Determines the overall size of all bounds
     	boundSize = BoundSize * scale;
+    	
+        //Updates the Offset valuex from the x or y position of the sprite to the hit box
     	nx = boundLegX;
     	ny = boundLegY;
+    	
+    	// Update variable to indicate that this sprite has a leg bound collider
     	leg = true;
+    	
+    	// Sets the integer value of the Leg bound x,y coordinate
     	_boundLegX = boundLegX;
     	_boundLegY = boundLegY;
+    	
+    	// Sets the integer value of the Left bound x,y coordinate
     	_boundLeftX = boundLeftX;
     	_boundLeftY = boundLeftY;
+    	
+    	// Sets the integer value of the Right bound x,y coordinate
     	_boundRightX = boundRightX;
     	_boundRightY = boundRightY;
+    	
+    	// Sets the integer value of the Head bound x,y coordinate
     	_boundHeadX = boundHeadX;
     	_boundHeadY = boundHeadY;
+    	
+    	// Update variable to indicate that this sprite has mutliple bounds
     	hasMultBounds = true;
+    	
+    	
     }
     
     //Turn on or off possible bounds(Toggling)
@@ -165,10 +183,24 @@ public class Sprite extends Object {
      * @param r - Rectangle to check for intersection
      * @return - Boolean for if the intersection is happening
      ***************************************************************/
-    public boolean checkLeftBound(Rectangle r) {
-    	if(left){ if(r.intersects(entity.getBounds(boundSize, _boundLeftX, _boundLeftY))) return true; }
+    public boolean checkLeftBound(Rectangle r) 
+    {
+    	// If the left bound of the the Rectangle is being used.. 
+    	if(left)
+    	{ 
+    		// Checks if the rectangle on the left side is intersecting with something
+    		if(r.intersects(entity.getBounds(boundSize, _boundLeftX, _boundLeftY)))
+    		{
+    			// returns that the left bound side of the Rectangle is intersecting something
+    			return true;
+    		}
+    	}
+    	
+    	// In the case where the programmer checks the left bound,
+    	// even if it's false, just return false
     	return false;
     }
+    
     public boolean checkRightBound(Rectangle r) {
     	if(right){ if(r.intersects(entity.getBounds(boundSize, _boundRightX, _boundRightY))) return true; }
     	return false;
@@ -263,6 +295,22 @@ public class Sprite extends Object {
         	if(right) entity.g2d.draw(getEntity().getBounds(boundSize, _boundRightX, _boundRightY));
         	if(head) entity.g2d.draw(getEntity().getBounds(boundSize, _boundHeadX, _boundHeadY));
         }
+    }
+    
+    public void drawAllBounds(Color c, Color c1, Color c2, Color c3)
+    {
+        entity.g2d.setColor(c);
+        //System.out.println("Leg Rectangle Bound Color is : Red");
+    	entity.g2d.draw(getEntity().getBounds(boundSize, _boundLegX, _boundLegY));
+        entity.g2d.setColor(c1);
+        //System.out.println("Left Rectangle Bound Color is : Yellow");
+    	entity.g2d.draw(getEntity().getBounds(boundSize, _boundLeftX, _boundLeftY));
+        entity.g2d.setColor(c2);
+        //System.out.println("Right Rectangle Bound Color is : Pink");
+    	entity.g2d.draw(getEntity().getBounds(boundSize, _boundRightX, _boundRightY));
+        entity.g2d.setColor(c3);
+        //System.out.println("Head Rectangle Bound Color is : Green");
+    	entity.g2d.draw(getEntity().getBounds(boundSize, _boundHeadX, _boundHeadY));
     }
 
     /**************************************************************

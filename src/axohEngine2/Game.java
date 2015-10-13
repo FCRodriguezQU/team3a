@@ -14,6 +14,7 @@
 //Packages
 package axohEngine2;
 
+import java.awt.Color;
 //Imports
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -58,6 +59,8 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	public LinkedList<AnimatedSprite> sprites() { return _sprites; }
 	private LinkedList<Tile> _tiles;
 	public LinkedList<Tile> tiles() { return _tiles; }
+	public AnimatedSprite playerCharacter;
+
 	
 	//Set up graphics, synchronizing, screenwidth and height
 	private transient BufferedImage backBuffer;
@@ -105,7 +108,7 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	abstract void spriteDying(AnimatedSprite sprite);
 	abstract void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2);
 	abstract void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2);
-	
+	 
 	/***************************************************************
 	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any othervariables
 	 * 
@@ -113,7 +116,8 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * @param width - An Int defining the width of the window
 	 * @param height - An Int defining the height of the window
 	 ****************************************************************/
-	public Game(int frameRate, int width, int height) {
+	public Game(int frameRate, int width, int height) 
+	{
 		//Set up JFrame window
 		Dimension size = new Dimension(width, height);
 		setPreferredSize(size);
@@ -228,6 +232,7 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 				updateSprites();
 				spriteCollision();
 				tileCollision();
+				//System.out.println("Number of sprites is : " + _sprites.size() + "Name of sprite 1 " +  _sprites.getFirst()._name + " sprite 2 " + _sprites.get(1)._name + " Sprite 3 " + _sprites.getLast()._name);
 			}
 			
 			//Render the graphics
@@ -425,6 +430,8 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 		data.update(currentMap.mapName(), currentOverlay.mapName(), playerX, playerY);
 	}
 	
+	
+	
 	/***********************************************************************
 	 * Detect when a sprite intersects a sprite and call a handling method
 	 * currently only rectangles are used for detection.
@@ -434,47 +441,163 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * hitDir - The bound which is being intersected on spr1
 	 * hitDir2 - The bound which is being intersected on spr2
 	**************************************************************************/
-	protected void spriteCollision() {
-		for(int i = 0; i < _sprites.size(); i++) {
-			AnimatedSprite spr1 = _sprites.get(i);
-			for(int j = 0; j < _sprites.size(); j++) {
-				if(_sprites.get(j) == spr1) continue;
-				AnimatedSprite spr2 = _sprites.get(j);
-				if(!spr1.hasMultBounds() && !spr2.hasMultBounds()){
-					if(spr1.getBounds().intersects(spr2.getBounds())) spriteCollision(spr1, spr2, -1, -1); //spr1 and spr2 have one bound
-				} else {
-					if(spr1.hasMultBounds() && !spr2.hasMultBounds()){ //spr1 has multiple bounds but not spr2
-						if(spr1.checkLeftBound(spr2.getBounds())) spriteCollision(spr1, spr2, 0, -1);
-				   		if(spr1.checkRightBound(spr2.getBounds())) spriteCollision(spr1, spr2, 1, -1);
-				   		if(spr1.checkHeadBound(spr2.getBounds())) spriteCollision(spr1, spr2, 2, -1);
-				   		if(spr1.checkLegBound(spr2.getBounds())) spriteCollision(spr1, spr2, 3, -1);
-					}
-					if(spr2.hasMultBounds() && !spr1.hasMultBounds()){ //spr2 has multiple bounds but not spr1
-						if(spr2.checkLeftBound(spr1.getBounds())) spriteCollision(spr1, spr2, -1, 0);
-				   		if(spr2.checkRightBound(spr1.getBounds())) spriteCollision(spr1, spr2, -1, 1);
-				   		if(spr2.checkHeadBound(spr1.getBounds())) spriteCollision(spr1, spr2, -1, 2);
-				   		if(spr2.checkLegBound(spr1.getBounds())) spriteCollision(spr1, spr2, -1, 3);
-					}
-					if(spr2.hasMultBounds() && spr1.hasMultBounds()){ //spr2 has multiple bounds as well as spr1
-						if(spr1.checkLeftBound(spr2.getLeftBound())) spriteCollision(spr1, spr2, 0, 0);
-						if(spr1.checkLeftBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 0, 1);
-						if(spr1.checkLeftBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 0, 2);
-						if(spr1.checkLeftBound(spr2.getLegBound())) spriteCollision(spr1, spr2, 0, 3);
+	protected void spriteCollision()
+	{			
+		for(int i = 0; i < _sprites.size(); i++) 
+		{
+			
+			if(_sprites.get(i)._name == "mainC")
+			{
+				playerCharacter = _sprites.get(i);
+			}
+			
 
-						if(spr1.checkRightBound(spr2.getLeftBound())) spriteCollision(spr1, spr2, 1, 0);
-						if(spr1.checkRightBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 1, 1);
-						if(spr1.checkRightBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 1, 2);
-						if(spr1.checkRightBound(spr2.getLegBound())) spriteCollision(spr1, spr2, 1, 3);
+			AnimatedSprite spr1 = _sprites.get(i);
+			//System.out.println(spr1._name);
+			//System.out.println("spr1 : " + spr1._name);
+			for(int j = 0; j < _sprites.size(); j++) 
+			{
+				//System.out.println("j loop has sprite name : " + _sprites.get(j)._name);
+				
+				// If it is the first sprite within the linkedlist of sprites
+				if(_sprites.get(j) == spr1)
+				{
+					// Just keep going on
+					continue;
+				}
+				
+				AnimatedSprite spr2 = _sprites.get(j);
+			    //hasMultBounds - Set to true if there is more than one bound being used
+
+				// Checks whether sprite 1 & sprite 2 bounds are not being used
+				if(!spr1.hasMultBounds() && !spr2.hasMultBounds())
+				{
+					// Determines whether sprite 1 is currently intersecting with sprite 2
+					if(spr1.getBounds().intersects(spr2.getBounds()))
+						{
+							// Call helperFunction
+							spriteCollision(spr1, spr2, -1, -1); //spr1 and spr2 have one bound
+						}
+				} 
+				else 
+				{
+					// If sprite 1 has more then one bound being used, but no bounds are being used on sprite 2
+					if(spr1.hasMultBounds() && !spr2.hasMultBounds())
+					{ 
+						// Checks if the leftBound is being intersected by sprite 2
+						if(spr1.checkLeftBound(spr2.getBounds())) 
+						{
+							spriteCollision(spr1, spr2, 0, -1);
+						}
 						
-						if(spr1.checkHeadBound(spr2.getLeftBound())) spriteCollision(spr1, spr2, 2, 0);
-						if(spr1.checkHeadBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 2, 1);
-						if(spr1.checkHeadBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 2, 2);
-						if(spr1.checkHeadBound(spr2.getLegBound())) spriteCollision(spr1, spr2, 2, 3);
+						// Checks if the leftBound is being intersected by sprite 2
+				   		if(spr1.checkRightBound(spr2.getBounds())) 
+				   		{
+				   			spriteCollision(spr1, spr2, 1, -1);
+				   		}
+				   		
+						// Checks if the leftBound is being intersected by sprite 2
+				   		if(spr1.checkHeadBound(spr2.getBounds())) 
+				   		{
+				   			spriteCollision(spr1, spr2, 2, -1);
+				   		}
+				   		
+						// Checks if the leftBound is being intersected by sprite 2
+				   		if(spr1.checkLegBound(spr2.getBounds()))
+				   		{
+				   			spriteCollision(spr1, spr2, 3, -1);
+				   		}
+					}
+					
+					// If sprite 2 has more then one bound being used, but no bounds are being used for sprite 1
+					if(spr2.hasMultBounds() && !spr1.hasMultBounds())
+					{ 
+						//spr2 has multiple bounds but not spr1
+						if(spr2.checkLeftBound(spr1.getBounds()))
+						{
+							spriteCollision(spr1, spr2, -1, 0);
+						}
+				   		if(spr2.checkRightBound(spr1.getBounds()))
+				   		{
+				   			spriteCollision(spr1, spr2, -1, 1);
+				   		}
+				   		if(spr2.checkHeadBound(spr1.getBounds()))
+				   		{
+				   			spriteCollision(spr1, spr2, -1, 2);
+				   		}
+				   		if(spr2.checkLegBound(spr1.getBounds())) 
+				   		{
+				   			spriteCollision(spr1, spr2, -1, 3);
+				   		}
+					}
+					if(spr2.hasMultBounds() && spr1.hasMultBounds())
+					{ //spr2 has multiple bounds as well as spr1
+						if(spr1.checkLeftBound(spr2.getLeftBound()))
+						{
+							spriteCollision(spr1, spr2, 0, 0);
+						}
+						if(spr1.checkLeftBound(spr2.getRightBound())) 
+						{
+							spriteCollision(spr1, spr2, 0, 1);
+						}
+						if(spr1.checkLeftBound(spr2.getHeadBound())) 
+						{
+							spriteCollision(spr1, spr2, 0, 2);
+						}
+						if(spr1.checkLeftBound(spr2.getLegBound()))
+						{
+							spriteCollision(spr1, spr2, 0, 3);
+						}
+
+						if(spr1.checkRightBound(spr2.getLeftBound()))
+						{
+							spriteCollision(spr1, spr2, 1, 0);
+						}
+						if(spr1.checkRightBound(spr2.getRightBound()))
+						{
+							spriteCollision(spr1, spr2, 1, 1);
+						}
+						if(spr1.checkRightBound(spr2.getHeadBound()))
+						{
+							spriteCollision(spr1, spr2, 1, 2);
+						}
+						if(spr1.checkRightBound(spr2.getLegBound())) 
+						{
+							spriteCollision(spr1, spr2, 1, 3);
+						}
 						
-						if(spr1.checkLegBound(spr2.getLeftBound())) spriteCollision(spr1, spr2, 3, 0);
-						if(spr1.checkLegBound(spr2.getRightBound())) spriteCollision(spr1, spr2, 3, 1);
-						if(spr1.checkLegBound(spr2.getHeadBound())) spriteCollision(spr1, spr2, 3, 2);
-						if(spr1.checkLegBound(spr2.getLegBound())) spriteCollision(spr1, spr2, 3, 3);
+						if(spr1.checkHeadBound(spr2.getLeftBound())) 
+						{
+							spriteCollision(spr1, spr2, 2, 0);
+						}
+						if(spr1.checkHeadBound(spr2.getRightBound()))
+						{
+							spriteCollision(spr1, spr2, 2, 1);
+						}
+						if(spr1.checkHeadBound(spr2.getHeadBound()))
+						{
+							spriteCollision(spr1, spr2, 2, 2);
+						}
+						if(spr1.checkHeadBound(spr2.getLegBound())) 
+						{
+							spriteCollision(spr1, spr2, 2, 3);
+						}
+						if(spr1.checkLegBound(spr2.getLeftBound())) 
+						{
+							spriteCollision(spr1, spr2, 3, 0);
+						}
+						if(spr1.checkLegBound(spr2.getRightBound())) 
+						{
+							spriteCollision(spr1, spr2, 3, 1);
+						}
+						if(spr1.checkLegBound(spr2.getHeadBound())) 
+						{
+							spriteCollision(spr1, spr2, 3, 2);
+						}
+						if(spr1.checkLegBound(spr2.getLegBound())) 
+						{
+							spriteCollision(spr1, spr2, 3, 3);
+						}
 					}
 				}//end mult bounds checks
 			}//end inner for
@@ -489,46 +612,157 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * any bounds made for either object the method calls a handling method 
 	 * for dealing with very specific properties that are relative to each game
 	 ***********************************************************************/
-	protected void tileCollision() {
-		for(int i = 0; i < _sprites.size(); i++) {
+	protected void tileCollision() 
+	{	
+		// Variable that will hold all of the chestTiles within the map
+		LinkedList<Tile> chestTiles = new LinkedList<Tile>();
+		
+		// Variable that will hold all of the chestTiles within a specific range of the player
+		LinkedList<Tile> tileWithinRange = new LinkedList<Tile>();
+		
+		// For each chest tile on the map...
+		for (Tile oneTile : this._tiles)
+		{
+			// If it is a chest tile
+			if(oneTile._name == "chest")
+			{
+				// Add it to the LinkedList
+				chestTiles.add(oneTile);
+			}
+		}
+		
+		// For each chest tile within the LinkedList of chestTiles...
+		for (Tile chestTileInRange : chestTiles)
+		{
+			if(chestTileInRange.DistanceFrom(playerCharacter, chestTileInRange))
+			{
+				chestTileInRange.drawBounds(Color.RED);
+			}
+		}
+		
+		
+		for(int i = 0; i < _sprites.size(); i++) 
+		{
 			AnimatedSprite spr = _sprites.get(i);
-			for(int j = 0; j < _tiles.size(); j++) {
+			for(int j = 0; j < _tiles.size(); j++) 
+			{
 				Tile tile = _tiles.get(j);
-				if(!spr.hasMultBounds() && !tile.hasMultBounds()) { //tile and spr have only one bound
-					if(tile.getTileBounds().intersects(spr.getBounds())) tileCollision(spr, tile, -1, -1);
-				} else {
-					if(spr.hasMultBounds() && !tile.hasMultBounds()){ //spr has multiple bounds, not tile
-				   		if(spr.checkLeftBound(tile.getTileBounds())) tileCollision(spr, tile, 0, -1);
-				   		if(spr.checkRightBound(tile.getTileBounds())) tileCollision(spr, tile, 1, -1);
-				   		if(spr.checkHeadBound(tile.getTileBounds())) tileCollision(spr, tile, 2, -1);
-				   		if(spr.checkLegBound(tile.getTileBounds())) tileCollision(spr, tile, 3, -1);
+				if(!spr.hasMultBounds() && !tile.hasMultBounds()) 
+				{ //tile and spr have only one bound
+					if(tile.getTileBounds().intersects(spr.getBounds()))
+					{
+						tileCollision(spr, tile, -1, -1);
 					}
-					if(tile.hasMultBounds() && !spr.hasMultBounds()){ //tile has multiple bounds, not spr
-						if(tile.checkLeftBound(spr.getBounds())) tileCollision(spr, tile, -1, 0);
-				   		if(tile.checkRightBound(spr.getBounds())) tileCollision(spr, tile, -1, 1);
-				   		if(tile.checkHeadBound(spr.getBounds())) tileCollision(spr, tile, -1, 2);
-				   		if(tile.checkLegBound(spr.getBounds())) tileCollision(spr, tile, -1, 3);
+				}
+				else 
+				{
+					if(spr.hasMultBounds() && !tile.hasMultBounds())
+					{ //spr has multiple bounds, not tile
+				   		if(spr.checkLeftBound(tile.getTileBounds()))
+				   			{
+				   			tileCollision(spr, tile, 0, -1);
+				   			}
+				   		if(spr.checkRightBound(tile.getTileBounds()))
+				   			{
+				   			tileCollision(spr, tile, 1, -1);
+				   			}
+				   		if(spr.checkHeadBound(tile.getTileBounds()))
+				   			{
+				   			tileCollision(spr, tile, 2, -1);
+				   			}
+				   		if(spr.checkLegBound(tile.getTileBounds()))
+				   			{
+				   			tileCollision(spr, tile, 3, -1);
+				   			}
 					}
-					if(tile.hasMultBounds() && spr.hasMultBounds()){ //spr has multiple bounds as well as tile
-						if(spr.checkLeftBound(tile.getLeftBound())) tileCollision(spr, tile, 0, 0);
-						if(spr.checkLeftBound(tile.getRightBound())) tileCollision(spr, tile, 0, 1);
-						if(spr.checkLeftBound(tile.getHeadBound())) tileCollision(spr, tile, 0, 2);
-						if(spr.checkLeftBound(tile.getLegBound())) tileCollision(spr, tile, 0, 3);
+					if(tile.hasMultBounds() && !spr.hasMultBounds())
+					{ //tile has multiple bounds, not spr
+						if(tile.checkLeftBound(spr.getBounds()))
+						{
+							tileCollision(spr, tile, -1, 0);
+						}
+				   		if(tile.checkRightBound(spr.getBounds())) 
+				   		{
+				   			tileCollision(spr, tile, -1, 1);
+				   		}
+				   		if(tile.checkHeadBound(spr.getBounds())) 
+				   		{
+				   			tileCollision(spr, tile, -1, 2);
+				   		}
+				   		if(tile.checkLegBound(spr.getBounds())) 
+				   		{
+				   			tileCollision(spr, tile, -1, 3);
+				   		}
+					}
+					if(tile.hasMultBounds() && spr.hasMultBounds())
+					{ //spr has multiple bounds as well as tile
+						if(spr.checkLeftBound(tile.getLeftBound()))
+							{
+							tileCollision(spr, tile, 0, 0);
+							}
+						if(spr.checkLeftBound(tile.getRightBound()))
+							{
+							tileCollision(spr, tile, 0, 1);
+							}
+						if(spr.checkLeftBound(tile.getHeadBound()))
+							{
+							tileCollision(spr, tile, 0, 2);
+							}
+						if(spr.checkLeftBound(tile.getLegBound())) 
+							{
+							tileCollision(spr, tile, 0, 3);
+							}
 
-						if(spr.checkRightBound(tile.getLeftBound())) tileCollision(spr, tile, 1, 0);
-						if(spr.checkRightBound(tile.getRightBound())) tileCollision(spr, tile, 1, 1);
-						if(spr.checkRightBound(tile.getHeadBound())) tileCollision(spr, tile, 1, 2);
-						if(spr.checkRightBound(tile.getLegBound())) tileCollision(spr, tile, 1, 3);
+						if(spr.checkRightBound(tile.getLeftBound())) 
+							{
+							tileCollision(spr, tile, 1, 0);
+							}
+						if(spr.checkRightBound(tile.getRightBound())) 
+							{
+							tileCollision(spr, tile, 1, 1);
+							}
+						if(spr.checkRightBound(tile.getHeadBound()))
+							{
+							tileCollision(spr, tile, 1, 2);
+							}
+						if(spr.checkRightBound(tile.getLegBound())) 
+							{
+							tileCollision(spr, tile, 1, 3);
+							}
 						
-						if(spr.checkHeadBound(tile.getLeftBound())) tileCollision(spr, tile, 2, 0);
-						if(spr.checkHeadBound(tile.getRightBound())) tileCollision(spr, tile, 2, 1);
-						if(spr.checkHeadBound(tile.getHeadBound())) tileCollision(spr, tile, 2, 2);
-						if(spr.checkHeadBound(tile.getLegBound())) tileCollision(spr, tile, 2, 3);
+						if(spr.checkHeadBound(tile.getLeftBound()))
+							{
+							tileCollision(spr, tile, 2, 0);
+							}
+						if(spr.checkHeadBound(tile.getRightBound())) 
+							{
+							tileCollision(spr, tile, 2, 1);
+							}
+						if(spr.checkHeadBound(tile.getHeadBound())) 
+							{
+							tileCollision(spr, tile, 2, 2);
+							}
+						if(spr.checkHeadBound(tile.getLegBound())) 
+							{
+							tileCollision(spr, tile, 2, 3);
+							}
 						
-						if(spr.checkLegBound(tile.getLeftBound())) tileCollision(spr, tile, 3, 0);
-						if(spr.checkLegBound(tile.getRightBound())) tileCollision(spr, tile, 3, 1);
-						if(spr.checkLegBound(tile.getHeadBound())) tileCollision(spr, tile, 3, 2);
-						if(spr.checkLegBound(tile.getLegBound())) tileCollision(spr, tile, 3, 3);
+						if(spr.checkLegBound(tile.getLeftBound()))
+							{
+							tileCollision(spr, tile, 3, 0);
+							}
+						if(spr.checkLegBound(tile.getRightBound())) 
+							{
+							tileCollision(spr, tile, 3, 1);
+							}
+						if(spr.checkLegBound(tile.getHeadBound()))
+							{
+							tileCollision(spr, tile, 3, 2);
+							}
+						if(spr.checkLegBound(tile.getLegBound()))
+							{
+							tileCollision(spr, tile, 3, 3);
+							}
 					}
 				}
 			} //end _tiles for loop
@@ -536,22 +770,33 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	}
 	
 	//Draw animated sprites automatically, they must be in the list (Includes tiles)
-	protected void drawSprites() {
-		for(int i = 0; i < _sprites.size(); i++) {
+	protected void drawSprites() 
+	{
+		for(int i = 0; i < _sprites.size(); i++)
+		{
 			AnimatedSprite spr = (AnimatedSprite) _sprites.get(i);
-			if(spr.alive()) {
+			if(spr.alive())
+			{
 				spr.updateFrame();
 				spriteDraw(spr);
 			}
 		}
-		for(int i = 0; i < _tiles.size(); i++) _tiles.get(i).updateFrame();
+		for(int i = 0; i < _tiles.size(); i++) 
+			{
+			_tiles.get(i).updateFrame();
+			}
 	}
 	
 	//Delete the sprite that has been killed from the system
-	private void purgeSprites() {
-		for(int i = 0; i < _sprites.size(); i++) {
+	private void purgeSprites() 
+	{
+		for(int i = 0; i < _sprites.size(); i++)
+		{
 			AnimatedSprite spr = _sprites.get(i);
-			if(spr.alive() == false) _sprites.remove(i);
+			if(spr.alive() == false) 
+			{
+				_sprites.remove(i);
+			}
 		}
 	}
 	
@@ -566,8 +811,12 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * not all of these tiles have properties that need updateing like animations.
 	 * This allows for a much faster, smoother game experience as well as larger maps.
 	 *********************************************************************/
-	void addTile(Tile tile) {
-		if(tile.hasProperty()) tiles().add(tile);
+	void addTile(Tile tile) 
+	{
+		if(tile.hasProperty())
+		{
+			tiles().add(tile);
+		}
 	}
 	
 	/**********************************************************************
@@ -582,7 +831,11 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * 
 	 * '\n' makes a new line
 	 **********************************************************************/
-	void drawString(Graphics2D g2d, String text, int x, int y) {
-        for(String line : text.split("\n")) g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
+	void drawString(Graphics2D g2d, String text, int x, int y) 
+	{
+        for(String line : text.split("\n"))
+        	{
+        		g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
+        	}
     }
 }

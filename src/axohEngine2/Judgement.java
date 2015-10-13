@@ -19,8 +19,11 @@ package axohEngine2;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import java.math.*;
 
 import javax.swing.JFrame;
 
@@ -38,26 +41,30 @@ import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
 
 //Start class by also extending the 'Game.java' engine interface
-public class Judgement extends Game {
+public class Judgement extends Game 
+{
 	//For serializing (The saving system)
 	private static final long serialVersionUID = 1L;
 	
 	/****************** Variables **********************/
-	//--------- Screen ---------
-	//SCREENWIDTH - Game window width
-	//SCREENHEIGHT - Game window height
-	//CENTERX/CENTERY - Center of the game window's x/y
+	/*--------- Screen ---------
+	 * SCREENWIDTH - Game window width
+	 * SCREENHEIGHT - Game window height
+	 * CENTERX/CENTERY - Center of the game window's x/y
+	 */
 	static int SCREENWIDTH = 1600;
 	static int SCREENHEIGHT = 900;
 	static int CENTERX = SCREENWIDTH / 2;
 	static int CENTERY = SCREENHEIGHT / 2;
 	
-	//--------- Miscelaneous ---------
-	//booleans - A way of detecting a pushed key in game
-	//random - Use this to generate a random number
-	//state - Game states used to show specific info ie. pause/running
-	//option - In game common choices at given times
-	//Fonts - Variouse font sizes in the Arial style for different in game text
+	/*--------- Miscelaneous ---------
+	 *booleans - A way of detecting a pushed key in game
+	 *random - Use this to generate a random number
+	 *state - Game states used to show specific info ie. pause/running
+	 *option - In game common choices at given times
+	 *Fonts - Variouse font sizes in the Arial style for different in game text
+	 *
+	 */
 	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace;
 	Random random = new Random();
 	STATE state; 
@@ -66,12 +73,13 @@ public class Judgement extends Game {
 	private Font bold = new Font("Arial", Font.BOLD, 72);
 	private Font bigBold = new Font("Arial", Font.BOLD, 96);
 	
-	//--------- Player and scale ---------
-	//scale - All in game art is 16 x 16 pixels, the scale is the multiplier to enlarge the art and give it the pixelated look
-	//mapX/mapY - Location of the camera on the map
-	//playerX/playerY - Location of the player on the map
-	//startPosX/startPosY - Starting position of the player in the map
-	//playerSpeed - How many pixels the player moves in a direction each update when told to
+	/*--------- Player and scale ---------
+	 * scale - All in game art is 16 x 16 pixels, the scale is the multiplier to enlarge the art and give it the pixelated look
+	 * mapX/mapY - Location of the camera on the map
+	 * playerX/playerY - Location of the player on the map
+	 * startPosX/startPosY - Starting position of the player in the map
+	 * playerSpeed - How many pixels the player moves in a direction each update when told to
+	 * */
 	private int scale;
 	private int mapX;
 	private int mapY;
@@ -81,26 +89,28 @@ public class Judgement extends Game {
 	private int startPosY;
 	private int playerSpeed;
 	
-	//----------- Map and input --------
-	//currentMap - The currently displayed map the player can explore
-	//currentOverlay - The current overlay which usually contains houses, trees, pots, etc.
-	//mapBase - The database which contains all variables which pertain to specific maps(NPCs, monsters, chests...)
-	//inputWait - How long the system waits for after an action is done on the keyboard
-	//confirmUse - After some decisions are made, a second question pops up, true equals continue action from before.
+	/*----------- Map and input --------
+	* currentMap - The currently displayed map the player can explore
+	* currentOverlay - The current overlay which usually contains houses, trees, pots, etc.
+	* mapBase - The database which contains all variables which pertain to specific maps(NPCs, monsters, chests...)
+	* inputWait - How long the system waits for after an action is done on the keyboard
+	* confirmUse - After some decisions are made, a second question pops up, true equals continue action from before.
+	*/
 	private Map currentMap;
-	private Map currentOverlay;
+	public Map currentOverlay;
 	private MapDatabase mapBase;
 	private int inputWait = 5;
 	private boolean confirmUse = false;
 	
-	//----------- Menus ----------------
-	//inX/inY - In Game Menu starting location for default choice highlight
-	//inLocation - Current choice in the in game menu represented by a number, 0 is the top
-	//sectionLoc - Current position the player could choose after the first choice has been made in the in game menu(Items -> potion), 0 is the top.
-	//titleX, titleY, titleX2, titleY2 - Positions for specific moveable sprites at the title screen (arrow/highlight).
-	//titleLocation - Current position the player is choosing in the title screen(File 1, 2, 3) 0 is top
-	//currentFile - Name of the currently loaded file
-	//wasSaving/wait/waitOn - Various waiting variables to give the player time to react to whats happening on screen
+	/*----------- Menus ----------------
+	 * inX/inY - In Game Menu starting location for default choice highlight
+	 * inLocation - Current choice in the in game menu represented by a number, 0 is the top
+	 * sectionLoc - Current position the player could choose after the first choice has been made in the in game menu(Items -> potion), 0 is the top.
+	 * titleX, titleY, titleX2, titleY2 - Positions for specific moveable sprites at the title screen (arrow/highlight).
+	 * titleLocation - Current position the player is choosing in the title screen(File 1, 2, 3) 0 is top
+	 * currentFile - Name of the currently loaded file
+	 * wasSaving/wait/waitOn - Various waiting variables to give the player time to react to whats happening on screen
+	 */
 	private int inX = 90, inY = 90;
 	private int inLocation;
 	private int sectionLoc;
@@ -112,8 +122,9 @@ public class Judgement extends Game {
 	private int wait;
 	private boolean waitOn = false;
 	
-	//----------- Game  -----------------
-	//SpriteSheets (To be split in to multiple smaller sprites)
+	/*----------- Game  -----------------
+	 * SpriteSheets (To be split in to multiple smaller sprites)
+	 */
 	SpriteSheet extras1;
 	SpriteSheet mainCharacter;
 	
@@ -133,15 +144,20 @@ public class Judgement extends Game {
 	Mob playerMob;
 	Mob randomNPC;
 	
+	static int temp = 0;
+	
 	/*********************************************************************** 
 	 * Constructor
 	 * 
 	 * Set up the super class Game and set the window to appear
 	 **********************************************************************/
-	public Judgement() {
+	public Judgement() 
+	{
 		super(130, SCREENWIDTH, SCREENHEIGHT);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		currentMap.accessTile(temp).drawBounds(Color.BLACK);
+		currentOverlay.accessTile(temp).drawBounds(Color.ORANGE);
 	}
 	
 	/****************************************************************************
@@ -149,7 +165,8 @@ public class Judgement extends Game {
 	 * This method is called only once by the 'Game.java' class, for startup
 	 * Initialize all non-int variables here
 	 *****************************************************************************/
-	void gameStartUp() {
+	void gameStartUp() 
+	{
 		/****************************************************************
 		 * The "camera" is the mapX and mapY variables. These variables 
 		 * can be changed in order to move the map around, simulating the
@@ -158,7 +175,7 @@ public class Judgement extends Game {
 		 * is moved around.
 		 ****************************************************************/
 		//****Initialize Misc Variables
-		state = state.TITLE;
+		state = STATE.TITLE;
 		option = OPTION.NONE;
 		startPosX = -400; //TODO: Make a method that takes a tile index and spits back an x or y coordinate of that tile
 		startPosY = -400;
@@ -190,7 +207,7 @@ public class Judgement extends Game {
 		
 		//****Initialize and setup Mobs*********************************************************************
 		playerMob = new Mob(this, graphics(), mainCharacter, 40, TYPE.PLAYER, "mainC", true);
-		playerMob.setMultBounds(6, 50, 95, 37, 88, 62, 92, 62, 96);
+		playerMob.setMultBounds(7, 50, 95, 37, 55, 62, 55, 50, 10);
 		playerMob.setMoveAnim(32, 48, 40, 56, 3, 8);
 		playerMob.addAttack("sword", 0, 5);
 		playerMob.getAttack("sword").addMovingAnim(17, 25, 9, 1, 3, 8);
@@ -202,19 +219,59 @@ public class Judgement extends Game {
 		
 		//*****Initialize and setup first Map******************************************************************
 		mapBase = new MapDatabase(this, graphics(), scale);
+		
 		//Get Map from the database
-		for(int i = 0; i < mapBase.maps.length; i++){
-			if(mapBase.getMap(i) == null) continue;
-			if(mapBase.getMap(i).mapName() == "city") currentMap = mapBase.getMap(i);
-			if(mapBase.getMap(i).mapName() == "cityO") currentOverlay = mapBase.getMap(i);
+		for(int i = 0; i < mapBase.maps.length; i++)
+		{
+			// Identifies the rendering process
+			if(i < 4)
+			{
+				System.out.println("Rendering map " + mapBase.getMap(i)._name);
+			}
+			
+			// If the map equals nothing 
+			if(mapBase.getMap(i) == null)
+			{
+				// Just continue on ahead
+				continue;
+			}
+			// If the map database has the map name "city".. 
+			if(mapBase.getMap(i).mapName() == "city")
+			{
+				// Set the map pointer to hold the correct map object
+				currentMap = mapBase.getMap(i);
+			}
+			// If the map database has the map name "city0"...
+			if(mapBase.getMap(i).mapName() == "cityO")
+			{
+				// Set the map pointer to hold the correct map object
+				currentOverlay = mapBase.getMap(i);
+			}
 		}
 		//Add the tiles from the map to be updated each system cycle
-		for(int i = 0; i < currentMap.getHeight() * currentMap.getHeight(); i++){
+		for(int i = 0; i < currentMap.getHeight() * currentMap.getHeight(); i++)
+		{
+			temp = i;
+			// Add a tile to the map based upon the index of i
 			addTile(currentMap.accessTile(i));
+			
+			// Add a tile to the currentOverlay map based upon the index of i 
 			addTile(currentOverlay.accessTile(i));
-			if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
-			if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
+			
+			// Check if the current map has a mob object at that tile location
+			if(currentMap.accessTile(i).hasMob()) 
+			{
+				// If so, 
+				sprites().add(currentMap.accessTile(i).mob());
+			}
+			// Check if the currentMap overlay has a mob object at that tile location
+			if(currentOverlay.accessTile(i).hasMob()) 
+			{
+				sprites().add(currentOverlay.accessTile(i).mob());
+			}
+			
 			currentMap.accessTile(i).getEntity().setX(-300);
+			
 			currentOverlay.accessTile(i).getEntity().setX(-300);
 		}
 		
@@ -227,13 +284,23 @@ public class Judgement extends Game {
 	 * Method that updates with the default 'Game.java' loop method
 	 * Add game specific elements that need updating here
 	 *****************************************************************************/
-	void gameTimedUpdate() {
-		checkInput(); //Check for user input
+	void gameTimedUpdate() 
+	{
+		// Checks for the user's input
+		checkInput();
+		
 		//Update certain specifics based on certain game states
-		if(state == state.TITLE) title.update(option, titleLocation); //Title Menu update
-		if(state == state.INGAMEMENU) inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
+		if(state == STATE.TITLE)
+		{
+			title.update(option, titleLocation); //Title Menu update
+		}
+		if(state == STATE.INGAMEMENU)
+		{
+			inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
+		}
+		
 		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
-		System.out.println(frameRate()); //Print the current framerate to the console
+		//System.out.println("The framerate is : " + frameRate()); //Print the current framerate to the console
 		if(waitOn) wait--;
 	}
 	
@@ -255,7 +322,8 @@ public class Judgement extends Game {
 		g2d.setFont(simple);
 		
 		//GUI rendering for when a specific state is set, only specific groups of data is drawn at specific times
-		if(state == state.GAME) {
+		if(state == STATE.GAME) 
+		{
 			//Render the map, the player, any NPCs or Monsters and the player health or status
 			currentMap.render(this, g2d, mapX, mapY);
 			currentOverlay.render(this, g2d, mapX, mapY);
@@ -267,19 +335,22 @@ public class Judgement extends Game {
 			g2d.setColor(Color.YELLOW);
 			g2d.drawString("NPC health: " + currentOverlay.accessTile(98).mob().health(), CENTERX + 200, CENTERY - 350);
 		}
-		if(state == state.INGAMEMENU){
+		if(state == STATE.INGAMEMENU)
+		{
 			//Render the in game menu and specific text
 			inMenu.render(this, g2d, inX, inY);
 			g2d.setColor(Color.red);
 			if(confirmUse) g2d.drawString("Use this?", CENTERX, CENTERY);
 		}
-		if(state == state.TITLE) {
+		if(state == STATE.TITLE) 
+		{
 			//Render the title screen
 			title.render(this, g2d, titleX, titleY, titleX2, titleY2);
 		}
 		
 		//Render save time specific writing
-		if(option == OPTION.SAVE){
+		if(option == OPTION.SAVE)
+		{
 			drawString(g2d, "Are you sure you\n      would like to save?", 660, 400);
 		}
 		if(wasSaving && wait > 0) {
@@ -296,15 +367,18 @@ public class Judgement extends Game {
 	void gameShutDown() {		
 	}
 
-	void spriteUpdate(AnimatedSprite sprite) {		
+	void spriteUpdate(AnimatedSprite sprite) 
+	{		
 	}
 
-	void spriteDraw(AnimatedSprite sprite) {		
+	void spriteDraw(AnimatedSprite sprite) 
+	{		
 	}
 
-	void spriteDying(AnimatedSprite sprite) {		
+	void spriteDying(AnimatedSprite sprite) 
+	{		
 	}
-
+	
 	/*************************************************************************
 	 * @param AnimatedSprite
 	 * @param AnimatedSprite
@@ -320,52 +394,70 @@ public class Judgement extends Game {
 	 * hitDir is a number between and including 0 and 3, these assignments are taken care of in 'Game.java'.
 	 * What hitDir is actually referring to is the specific hit box that is on a multi-box sprite.
 	 *****************************************************************************/
-	void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2) {
-		//Get the smallest possible overlap between the two problem sprites
-		double leftOverlap = (spr1.getBoundX(hitDir) + spr1.getBoundSize() - spr2.getBoundX(hitDir2));
-		double rightOverlap = (spr2.getBoundX(hitDir2) + spr2.getBoundSize() - spr1.getBoundX(hitDir));
-		double topOverlap = (spr1.getBoundY(hitDir) + spr1.getBoundSize() - spr2.getBoundY(hitDir2));
-		double botOverlap = (spr2.getBoundY(hitDir2) + spr2.getBoundSize() - spr1.getBoundY(hitDir));
-		double smallestOverlap = Double.MAX_VALUE; 
-		double shiftX = 0;
-		double shiftY = 0;
-
-		if(leftOverlap < smallestOverlap) { //Left
-			smallestOverlap = leftOverlap;
-			shiftX -= leftOverlap; 
-			shiftY = 0;
-		}
-		if(rightOverlap < smallestOverlap){ //right
-			smallestOverlap = rightOverlap;
-			shiftX = rightOverlap;
-			shiftY = 0;
-		}
-		if(topOverlap < smallestOverlap){ //up
-			smallestOverlap = topOverlap;
-			shiftX = 0;
-			shiftY -= topOverlap;
-		}
-		if(botOverlap < smallestOverlap){ //down
-			smallestOverlap = botOverlap;
-			shiftX = 0;
-			shiftY = botOverlap;
-		}
-
-		//Handling very specific collisions
-		if(spr1.spriteType() == TYPE.PLAYER && state == state.GAME){
-			if(spr2 instanceof Mob) ((Mob) spr2).stop();
+	void spriteCollision(AnimatedSprite spr1, AnimatedSprite spr2, int hitDir, int hitDir2) 
+	{	
+		// Only check for sprite collision if the user is not in the title screen
+		if(state != STATE.TITLE)
+		{
+			//System.out.println("Sprite Collision Being Called");
+			//System.out.println("Checking " + spr1._name + " sprite and " + spr2._name + " sprite");
 			
-			//This piece of code is commented out because I still need the capability of getting a tile from an xand y position
-			/*if(((Mob) spr1).attacking() && currentOverlay.getFrontTile((Mob) spr1, playerX, playerY, CENTERX, CENTERY).getBounds().intersects(spr2.getBounds())){
-				((Mob) spr2).takeDamage(25);
-				//TODO: inside of take damage should be a number dependant on the current weapon equipped, change later
-			}*/
+			//Get the smallest possible overlap between the two problem sprites
+			double leftOverlap = (spr1.getBoundX(hitDir) + spr1.getBoundSize() - spr2.getBoundX(hitDir2));
+			double rightOverlap = (spr2.getBoundX(hitDir2) + spr2.getBoundSize() - spr1.getBoundX(hitDir));
+			double topOverlap = (spr1.getBoundY(hitDir) + spr1.getBoundSize() - spr2.getBoundY(hitDir2));
+			double botOverlap = (spr2.getBoundY(hitDir2) + spr2.getBoundSize() - spr1.getBoundY(hitDir));
+			double smallestOverlap = Double.MAX_VALUE; 
+			double shiftX = 0;
+			double shiftY = 0;
 			
-			//Handle simple push back collision
-			if(playerX != 0) playerX -= shiftX;
-			if(playerY != 0) playerY -= shiftY;
-			if(playerX == 0) mapX -= shiftX;
-			if(playerY == 0) mapY -= shiftY;
+			System.out.println("Smallest Overlap : " + smallestOverlap);
+			System.out.println("Right Overlap : " + rightOverlap);
+			System.out.println("Top Overlap : " + topOverlap);
+			System.out.println("Bottun Overlap : " + botOverlap);
+	
+			if(leftOverlap < smallestOverlap) { //Left
+				smallestOverlap = leftOverlap;
+				shiftX -= leftOverlap; 
+				System.out.println("Thing 1");
+				shiftY = 0;
+			}
+			if(rightOverlap < smallestOverlap){ //right
+				smallestOverlap = rightOverlap;
+				System.out.println("Thing 2");
+				shiftX = rightOverlap;
+				shiftY = 0;
+			}
+			if(topOverlap < smallestOverlap){ //up
+				smallestOverlap = topOverlap;
+				System.out.println("Thing 3");
+				shiftX = 0;
+				shiftY -= topOverlap;
+			}
+			if(botOverlap < smallestOverlap){ //down
+				smallestOverlap = botOverlap;
+				System.out.println("Thing 4");
+				shiftX = 0;
+				shiftY = botOverlap;
+			}
+	
+			//Handling very specific collisions
+			if(spr1.spriteType() == TYPE.PLAYER && state == STATE.GAME)
+			{
+				if(spr2 instanceof Mob) ((Mob) spr2).stop();
+				
+				//This piece of code is commented out because I still need the capability of getting a tile from an xand y position
+				/*if(((Mob) spr1).attacking() && currentOverlay.getFrontTile((Mob) spr1, playerX, playerY, CENTERX, CENTERY).getBounds().intersects(spr2.getBounds())){
+					((Mob) spr2).takeDamage(25);
+					//TODO: inside of take damage should be a number dependant on the current weapon equipped, change later
+				}*/
+				
+				//Handle simple push back collision
+				if(playerX != 0) playerX -= shiftX;
+				if(playerY != 0) playerY -= shiftY;
+				if(playerX == 0) mapX -= shiftX;
+				if(playerY == 0) mapY -= shiftY;
+			}
 		}
 	}
 	
@@ -385,84 +477,114 @@ public class Judgement extends Game {
 	* 
 	* For more details on this method, refer to the spriteCollision method above
 	*************************************************************************/
-	void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2) {
-		double leftOverlap = (spr.getBoundX(hitDir) + spr.getBoundSize() - tile.getBoundX(hitDir2));
-		double rightOverlap = (tile.getBoundX(hitDir2) + tile.getBoundSize() - spr.getBoundX(hitDir));
-		double topOverlap = (spr.getBoundY(hitDir) + spr.getBoundSize() - tile.getBoundY(hitDir2));
-		double botOverlap = (tile.getBoundY(hitDir2) + tile.getBoundSize() - spr.getBoundY(hitDir));
-		double smallestOverlap = Double.MAX_VALUE; 
-		double shiftX = 0;
-		double shiftY = 0;
-
-		if(leftOverlap < smallestOverlap) { //Left
-			smallestOverlap = leftOverlap;
-			shiftX -= leftOverlap; 
-			shiftY = 0;
-		}
-		if(rightOverlap < smallestOverlap){ //right
-			smallestOverlap = rightOverlap;
-			shiftX = rightOverlap;
-			shiftY = 0;
-		}
-		if(topOverlap < smallestOverlap){ //up
-			smallestOverlap = topOverlap;
-			shiftX = 0;
-			shiftY -= topOverlap;
-		}
-		if(botOverlap < smallestOverlap){ //down
-			smallestOverlap = botOverlap;
-			shiftX = 0;
-			shiftY = botOverlap;
-		}
-		
-		//Deal with a tiles possible event property
-		if(tile.hasEvent()){
-			if(spr.spriteType() == TYPE.PLAYER) {
-				//Warp Events(Doors)
-				if(tile.event().getEventType() == TYPE.WARP) {
-					tiles().clear();
-					sprites().clear();
-					sprites().add(playerMob);
-					//Get the new map
-					for(int i = 0; i < mapBase.maps.length; i++){
-						 if(mapBase.getMap(i) == null) continue;
-						 if(tile.event().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
-						 if(tile.event().getOverlayName() == mapBase.getMap(i).mapName()) currentOverlay = mapBase.getMap(i);
-					}
-					//Load in the new maps Tiles and Mobs
-					for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
-						addTile(currentMap.accessTile(i));
-						addTile(currentOverlay.accessTile(i));
-						if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
-						if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
-					}
-					//Move the player to the new position
-					playerX = tile.event().getNewX();
-					playerY = tile.event().getNewY();
-				}	
-			} //end warp
-			//Item exchange event
-			if(spr.spriteType() == TYPE.PLAYER && tile.event().getEventType() == TYPE.ITEM && keyAction){
-				if((tile._name).equals("chest")) tile.setFrame(tile.getSpriteNumber() + 1); //Chests should have opened and closed version next to each other
-				inMenu.addItem(tile.event().getItem()); //Add item to inventory
-				tile.endEvent();
+	void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2) 
+	{
+			System.out.println("Hit direction was : " + spr.getBoundX(hitDir));
+			double leftOverlap = (spr.getBoundX(hitDir) + spr.getBoundSize() - tile.getBoundX(hitDir2));
+			double rightOverlap = (tile.getBoundX(hitDir2) + tile.getBoundSize() - spr.getBoundX(hitDir));
+			double topOverlap = (spr.getBoundY(hitDir) + spr.getBoundSize() - tile.getBoundY(hitDir2));
+			double botOverlap = (tile.getBoundY(hitDir2) + tile.getBoundSize() - spr.getBoundY(hitDir));
+			double smallestOverlap = Double.MAX_VALUE; 
+			double shiftX = 0;
+			double shiftY = 0;
+			
+			System.out.println("Smallest Overlap : " + smallestOverlap);
+			System.out.println("Left Overlap : " + leftOverlap);
+			System.out.println("Right Overlap : " + rightOverlap);
+			System.out.println("Top Overlap : " + topOverlap);
+			System.out.println("Bottun Overlap : " + botOverlap);
+	
+	
+			if(leftOverlap < smallestOverlap) 
+			{ //Left
+				
+				// Updates smallestOverlap to equal leftOverlap
+				smallestOverlap = leftOverlap;
+				
+				// Updates the numerical value that the player must be shifted
+				shiftX -= leftOverlap; 
+				shiftY = 0;
 			}
-		}//end check events
-		
-		//If the tile is solid, move the player off of it and exit method immediately
-		if(spr.spriteType() == TYPE.PLAYER && tile.solid() && state == state.GAME) {
-			if(playerX != 0) playerX -= shiftX;
-			if(playerY != 0) playerY -= shiftY;
-			if(playerX == 0) mapX -= shiftX;
-			if(playerY == 0) mapY -= shiftY;
-			return;
-		}
-		//If an npc is intersecting a solid tile, move it off
-		if(spr.spriteType() != TYPE.PLAYER && tile.solid() && state == state.GAME){
-			if(spr instanceof Mob) {
-				((Mob) spr).setLoc((int)shiftX, (int)shiftY);
-				((Mob) spr).resetMovement();
+			if(rightOverlap < smallestOverlap)
+			{ 
+				// Updates smallestOverlap to equal rightOverlap
+				smallestOverlap = rightOverlap;
+				
+				// Updates the numerical value that the player must be shifted
+				shiftX = rightOverlap;
+				shiftY = 0;
 			}
+			if(topOverlap < smallestOverlap)
+			{ 
+				// Updates smallestOverlap to equal TopOverlap
+				smallestOverlap = topOverlap;
+			
+				// Updates the numerical value that the player must be shifted
+				shiftX = 0;
+				shiftY -= topOverlap;
+			}
+			if(botOverlap < smallestOverlap)
+			{ 
+				// Updates smallestOverlap to equal botOverlap
+				smallestOverlap = botOverlap;
+				
+				// Updates the numerical value that the player must be shifted
+				shiftX = 0;
+				shiftY = botOverlap;
+			}
+			
+			//Deal with a tiles possible event property
+			if(tile.hasEvent()){
+				if(spr.spriteType() == TYPE.PLAYER) 
+				{
+					//Warp Events(Doors)
+					if(tile.event().getEventType() == TYPE.WARP)
+					{
+						tiles().clear();
+						sprites().clear();
+						sprites().add(playerMob);
+						
+						//Get the new map
+						for(int i = 0; i < mapBase.maps.length; i++)
+						{
+							 if(mapBase.getMap(i) == null) continue;
+							 if(tile.event().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
+							 if(tile.event().getOverlayName() == mapBase.getMap(i).mapName()) currentOverlay = mapBase.getMap(i);
+						}
+						//Load in the new maps Tiles and Mobs
+						for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
+							addTile(currentMap.accessTile(i));
+							addTile(currentOverlay.accessTile(i));
+							if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
+							if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
+						}
+						//Move the player to the new position
+						playerX = tile.event().getNewX();
+						playerY = tile.event().getNewY();
+					}	
+				} //end warp
+				//Item exchange event
+				if(spr.spriteType() == TYPE.PLAYER && tile.event().getEventType() == TYPE.ITEM && keyAction){
+					if((tile._name).equals("chest")) tile.setFrame(tile.getSpriteNumber() + 1); //Chests should have opened and closed version next to each other
+					inMenu.addItem(tile.event().getItem()); //Add item to inventory
+					tile.endEvent();
+				}
+			}//end check events
+			
+			//If the tile is solid, move the player off of it and exit method immediately
+			if(spr.spriteType() == TYPE.PLAYER && tile.solid() && state == STATE.GAME) {
+				if(playerX != 0) playerX -= shiftX;
+				if(playerY != 0) playerY -= shiftY;
+				if(playerX == 0) mapX -= shiftX;
+				if(playerY == 0) mapY -= shiftY;
+				return;
+			}
+			//If an npc is intersecting a solid tile, move it off
+			if(spr.spriteType() != TYPE.PLAYER && tile.solid() && state == STATE.GAME){
+				if(spr instanceof Mob) {
+					((Mob) spr).setLoc((int)shiftX, (int)shiftY);
+					((Mob) spr).resetMovement();
+				}
 		}
 	}//end tileCollision method
 	
@@ -518,7 +640,7 @@ public class Judgement extends Game {
 		/********************************************
 		 * Special actions for In Game
 		 *******************************************/
-		if(state == state.GAME && inputWait < 0) { 
+		if(state == STATE.GAME && inputWait < 0) { 
 			//A or left arrow(move left)
 			if(keyLeft) {
 				xa = xa + 1 + playerSpeed;
@@ -545,10 +667,12 @@ public class Judgement extends Game {
 				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			movePlayer(xa, ya);
+			//this.RenderBoundsInGame();
+			playerMob.drawAllBounds(Color.red, Color.yellow, Color.pink, Color.green);
 		
 			//I(Inventory)
 			if(keyInventory) {
-				state = state.INGAMEMENU;
+				state = STATE.INGAMEMENU;
 				inputWait = 10;
 			}
 			
@@ -562,7 +686,7 @@ public class Judgement extends Game {
 		/*****************************************
 		 * Special actions for the Title Menu
 		 *****************************************/
-		if(state == state.TITLE && inputWait < 0){
+		if(state == STATE.TITLE && inputWait < 0){
 			//For when no initial choice has been made
 			if(option == OPTION.NONE){
 				//S or down arrow(Change selection)
@@ -642,8 +766,8 @@ public class Judgement extends Game {
 							loadGame();
 							inputWait = 5;
 							option = OPTION.NONE;
-							state = state.GAME;
-							setGameState(state.GAME);
+							state = STATE.GAME;
+							setGameState(STATE.GAME);
 						}
 					}
 				}//end enter key
@@ -668,9 +792,9 @@ public class Judgement extends Game {
 						save.newFile(title.getFileName());
 						title.setGetName(false);
 						currentFile = title.getFileName();
-						state = state.GAME;
+						state = STATE.GAME;
 						option = OPTION.NONE;
-						setGameState(state.GAME);
+						setGameState(STATE.GAME);
 					}
 				}//end get name
 			}//end new/load option
@@ -680,10 +804,10 @@ public class Judgement extends Game {
 		/******************************************
 		 * Special actions for In Game Menu
 		 ******************************************/
-		if(state == state.INGAMEMENU && inputWait < 0) {
+		if(state == STATE.INGAMEMENU && inputWait < 0) {
 			//I(Close inventory)
 			if(keyInventory) {
-				state = state.GAME;
+				state = STATE.GAME;
 				option = OPTION.NONE;
 				inLocation = 0;
 				inY = 90;
@@ -802,7 +926,7 @@ public class Judgement extends Game {
 			}
 			//Backspace(if a choice has not been made, this closes the inventory)
 			if(keyBack && option == OPTION.NONE) {
-				state = state.GAME;
+				state = STATE.GAME;
 				option = OPTION.NONE;
 				inLocation = 0;
 				sectionLoc = 0;
@@ -811,6 +935,25 @@ public class Judgement extends Game {
 			}
 		}
 		inputWait--;
+	}
+	
+	public void RenderBoundsInGame()
+	{
+		//Add the tiles from the map to be updated each system cycle
+		for(int i = 0; i < currentMap.getHeight() * currentMap.getHeight(); i++)
+		{	
+
+				if(currentMap.accessTile(i).isSolid())
+				{
+					currentMap.accessTile(i).drawBounds(Color.red);
+				}
+			// Check if the currentMap overlay has a mob object at that tile location
+
+				if(currentOverlay.accessTile(i).isSolid())
+				{
+					currentOverlay.accessTile(i).drawBounds(Color.blue);
+				}
+		}
 	}
 	
 	/**

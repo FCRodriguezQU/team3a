@@ -24,7 +24,8 @@ import axohEngine2.map.Event;
 import axohEngine2.map.Map;
 import axohEngine2.map.Tile;
 
-public class MapDatabase {
+public class MapDatabase 
+{
 
 	//SpriteSheets
 	SpriteSheet misc;
@@ -75,7 +76,8 @@ public class MapDatabase {
 	 * @param g2d - Graphics2D object needed to display images
 	 * @param scale - Number to be multiplied by each image for correct on screen display
 	 *******************************************************************/
-	public MapDatabase(JFrame frame, Graphics2D g2d, int scale) {
+	public MapDatabase(JFrame frame, Graphics2D g2d, int scale) 
+	{
 		//Currently a maximum of 200 maps possible(Can be changed if needed)
 		maps = new Map[200];
 		
@@ -87,6 +89,7 @@ public class MapDatabase {
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
 		
 		//Set up tile blueprints and if they are animating
+		// Note: Numerical Values indicate rendering layer
 		d = new Tile(frame, g2d, "door", environment32, 0);
 		f = new Tile(frame, g2d, "flower", misc, 1);
 		g = new Tile(frame, g2d, "grass", misc, 0);
@@ -98,7 +101,8 @@ public class MapDatabase {
 		hf = new Tile(frame, g2d, "floor", misc, 8);
 		c = new Tile(frame, g2d, "chest", extras2, 0, true);
 		
-		//Set the tile blueprints in an array for the Map
+		//Renders the first layer of the map(surface / walls)
+		// NOTE: Fixed Resolution, only takes creates array based upon resolution (40x40 = 1600)
 		Tile[] cityTiles = {b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b,
 						    b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b,
 						    b, b, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, b, b,
@@ -140,6 +144,7 @@ public class MapDatabase {
 						    b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b,
 						    b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b};
 
+		System.out.println("Rnedering city0Tiles");
 		Tile[] cityOTiles = {e, e, h, e, e, e, e, h, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e,
 							 e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e,
 							 e, e, e, d, e, e, e, e, d, e, e, e, c, c, c, c, c, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e, e,
@@ -187,7 +192,7 @@ public class MapDatabase {
 							 hf, hf, hf, hf, hf, hf,
 							 hf, hf, hf, hf, hf, hf,
 							 hf, hf, hf, hf, hf, hf};
-		
+
 		Tile[] houseOTiles = {hf, hf, hf, hf, hf, hf,
 						 	  hf, hf, hf, hf, hf, hf,
 						 	  hf, hf, hf, hf, hf, hf,

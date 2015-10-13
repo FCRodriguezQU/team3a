@@ -36,6 +36,7 @@ public class Tile extends AnimatedSprite {
 	private boolean _breakable;
 	private boolean hasEvent = false;
 	private boolean hasMob = false;
+	public Tile selfpointer;
 	
 	//event and mob - Variables that hold objects stored in the tile which can be accessed and/or changed in that tile
 	private Event event;
@@ -56,11 +57,13 @@ public class Tile extends AnimatedSprite {
 	 * @param sheet - The spriteSheet object which the tile graphic can be found on
 	 * @param spriteNumber - The number in the spriteSheet that the graphic can be found on
 	 ******************************************************************************************/
-	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber) {
+	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber) 
+	{
 		super(frame, g2d, sheet, spriteNumber, name);
 		_solid = false;
 		_slippery = false;
 		_breakable = false;
+		selfpointer = this;
 		
 		setSprite(sheet, spriteNumber); //Set the object image to 
 	}
@@ -75,7 +78,8 @@ public class Tile extends AnimatedSprite {
 	 * @param spriteNumber - Reference Constructor 1
 	 * @param solid - Property which the system checks to stop objects from moving on it
 	 **************************************************************************/
-	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber, boolean solid) {
+	public Tile(JFrame frame, Graphics2D g2d, String name, SpriteSheet sheet, int spriteNumber, boolean solid)
+	{
 		super(frame, g2d, sheet, spriteNumber, name);
 		_solid = solid;
 		_slippery = false;
@@ -188,7 +192,7 @@ public class Tile extends AnimatedSprite {
 	public void loadAnim(int frames, int delay) {
 		super.loadAnim(frames, delay);
 	}
-	
+		
 	/***************************************************************************
 	 * Render the tile on screen and cgange x and y position of the tile each update
 	 * 
@@ -223,5 +227,25 @@ public class Tile extends AnimatedSprite {
 		Rectangle r;
 		r = new Rectangle((int)entity.getX(), (int)entity.getY(), getSpriteSize(), getSpriteSize());
 		return r;
+	}
+	
+	public Boolean DistanceFrom(AnimatedSprite playerSprite ,Tile sprite2)
+	{
+		double range = 40.0;
+		double threshold = 250.0;
+		double playerSpriteOneBoundXLocation = playerSprite.getBounds().getCenterX();
+		double playerSpriteOneBoundYLocation = playerSprite.getBounds().getCenterY();
+		double spriteTwoBoundXLocation = sprite2.getBounds().getCenterX();
+		double spriteTwoBoundYLocation = sprite2.getBounds().getCenterY();
+
+		// If the two sprites location are negative 
+		if(Math.abs(playerSpriteOneBoundXLocation - (spriteTwoBoundXLocation + range)) < threshold  && Math.abs(playerSpriteOneBoundYLocation - (spriteTwoBoundYLocation + range)) < threshold)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

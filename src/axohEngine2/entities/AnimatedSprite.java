@@ -36,33 +36,43 @@ public class AnimatedSprite extends Sprite {
     public String _name;
     
     //currFrame - The current frame being displayed in the string of total possible images in the animation
-    //totFrames - The total number of images used in the animation
-    //delay - Time in between each frame change
-    //tempDelay - A variable that can be subtracted from which when it hits zero can change the frame and revert back to the delay number
-    //animating - Boolean that when false, stops the image from animating to the next frame
-    //playOnce - Boolean which makes an animation play only once and then stop
-    //nextAnim - The animation to switch to after playOnce has run
-    //nextDelay - The next Delay for the next animation after playOnce
-    //endFrame - The frame playOnce hits to switch to a different animation
-    //nextTotal - Next total amount of frames for the next animation to switch to after playOnce
     private int currFrame;
+
+    //totFrames - The total number of images used in the animation
     private int totFrames;
+
+    //delay - Time in between each frame change
     private int delay;
+
+    //tempDelay - A variable that can be subtracted from which when it hits zero can change the frame and revert back to the delay number
     private int tempDelay;
+
+    //animating - Boolean that when false, stops the image from animating to the next frame
     private boolean animating;
+
+    //playOnce - Boolean which makes an animation play only once and then stop
     public boolean playOnce = false;
+
+    //nextAnim - The animation to switch to after playOnce has run
     public int nextAnim;
+
+    //nextDelay - The next Delay for the next animation after playOnce
     public int nextDelay;
+
+    //endFrame - The frame playOnce hits to switch to a different animation
     public int endFrame;
+
+    //nextTotal - Next total amount of frames for the next animation to switch to after playOnce
     public int nextTotal;
-    
-    //Moving specific animation variables (Starting, total and delay frames)
+
+    //region Moving specific animation variables (Starting, total and delay frames)
 	public int leftAnim;
 	public int rightAnim;
 	public int upAnim;
 	public int downAnim;
 	public int walkFrames;
 	public int walkDelay;
+
 	
 	//For unsheathing TODO:(Needs to be moved to the Attack class)
 	public int unshLeft;
@@ -82,7 +92,8 @@ public class AnimatedSprite extends Sprite {
 	 * @param spriteNumber - The number pertaining to a frame on the spriteSheet
 	 * @param name - The name of the animation, not used in logic
 	 ************************************************************************/
-    public AnimatedSprite(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name) {
+    public AnimatedSprite(JFrame frame, Graphics2D g2d, SpriteSheet sheet, int spriteNumber, String name) 
+    {
         super(frame, g2d);
         animImage = new ImageEntity(frame);
         currFrame = 0;
@@ -279,7 +290,8 @@ public class AnimatedSprite extends Sprite {
     public void setSpriteNumber(int spriteNumber) { super.spriteNumber = spriteNumber; }
     
     //Used in the constructor to set an animated sprite's data using other given data
-    private void setAnimSprite() {
+    private void setAnimSprite() 
+    {
     	animImage.setImage(setSprite(getSheet(), getSpriteNumber())); 
     	setScale(getSheet().getScale());
     	setSpriteSize(getSheet().getSpriteSize() * getScale());

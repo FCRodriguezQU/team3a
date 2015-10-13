@@ -24,15 +24,19 @@ public class Map {
 	 * Variables
 	 *******************/
 	//mapHeight - In tiles, how tall the map is
-	//mapWIdth - In tiles, how wide the map is
-	//mapTiles - The array that holds all of the finished tiles
-	//spriteSize - The size in pixels of each tile
-	//_name - The name of the given map, does nothing more than to give the use and idea of what map they are looking at
 	private int mapHeight;
+	
+	//mapWIdth - In tiles, how wide the map is
 	private int mapWidth;
-	private Tile[] mapTiles;
+	
+	//mapTiles - The array that holds all of the rendered tiles
+	public Tile[] mapTiles;
+	
+	//spriteSize - The size in pixels of each tile
 	private int spriteSize;
-	private String _name;
+	
+	//_name - The name of the given map
+	public String _name;
 		
 	/************************************************************************
 	 * Constructor
@@ -49,15 +53,25 @@ public class Map {
 	 * @param mapHeight - An int identifying the height of an array in tiles
 	 * @param name - A String which identifies the map, this is strictly a user identifier, it isn't used in any logic 
 	 *************************************************************************/
-	public Map(JFrame frame, Graphics2D g2d, Tile[] tiles, int mapWidth, int mapHeight, String name) {
+	public Map(JFrame frame, Graphics2D g2d, Tile[] tiles, int mapWidth, int mapHeight, String name) 
+	{
+		// Initialization Process
 		this.mapHeight = mapHeight;
 		this.mapWidth = mapWidth;
 		mapTiles = tiles;
 		_name = name;
 		
-		for(int i = 0; i < mapTiles.length; i++) {
+		// 
+		for(int i = 0; i < mapTiles.length; i++) 
+		{
+			// Creates a new tile
 			mapTiles[i] = new Tile(mapTiles[i], frame, g2d);
+			
+			//System.out.println("Assigns MapTile at index " + i + "to the Sprite " + mapTiles[i]._name + "tile");
+
 		}
+		
+		// Record the size of one sprite
 		spriteSize = tiles[0].getSpriteSize();
 	}
 	
@@ -81,16 +95,36 @@ public class Map {
 	 * Offsets are used to render a piece of a map in the window at a time to indicate placement
 	 * in the world.
 	 ********************************************************************************************/
-	public void render(JFrame frame, Graphics2D g2d, int xx, int yy) {
-		int xt = xx;
-		for(int y = 0; y < mapHeight; y++) {
-			for(int x = 0; x < mapWidth; x++) {
-				mapTiles[x + y * mapWidth].renderTile(xx, yy, g2d, frame);
-				if(mapTiles[x + y * mapWidth].hasMob()) mapTiles[x + y * mapWidth].mob().renderMob(xx, yy);
-				xx = xx + spriteSize;
+	public void render(JFrame frame, Graphics2D g2d, int xoffset, int yoffset) 
+	{
+		// Create a variable which holds the offset value in the x direction
+		int xt = xoffset;
+		
+		// Rendering process for the map (y direction)
+		for(int y = 0; y < mapHeight; y++) 
+		{
+			// Rendering process for the map (x direction)
+			for(int x = 0; x < mapWidth; x++) 
+			{
+				// Gets the specific tile of and renders the tile 
+				mapTiles[x + y * mapWidth].renderTile(xoffset, yoffset, g2d, frame);
+				
+				// If that specific tile has a mob (object)
+				if(mapTiles[x + y * mapWidth].hasMob())
+				{
+					// Render the mod at that specifci overllay index
+					mapTiles[x + y * mapWidth].mob().renderMob(xoffset, yoffset);
+				}
+				
+				// Update the xoffset to include the sprite 
+				xoffset = xoffset + spriteSize;
 			}
-			xx = xt;
-			yy = yy + spriteSize;
+			
+			// Update the paremater of the offset to hold the intial xoffset's value
+			xoffset = xt;
+			
+			// Update the yoffset to include the rendered sprites size
+			yoffset = yoffset + spriteSize;
 		}
 	}
 	
@@ -101,7 +135,8 @@ public class Map {
 	 * @param index - An int of total x + y * width of the map to access a tile
 	 * @return - A Tile which is accessed and can be changed
 	 *****************************************************************************/
-	public Tile accessTile(int index) {
+	public Tile accessTile(int index) 
+	{
 		return mapTiles[index];
 	}
 	
