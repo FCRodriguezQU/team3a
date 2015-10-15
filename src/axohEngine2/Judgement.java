@@ -20,31 +20,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.Random;
-import java.math.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-
-import com.sun.prism.Image;
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.ImageEntity;
@@ -88,7 +78,7 @@ public class Judgement extends Game implements ActionListener
 	 *Fonts - Various font sizes in the Arial style for different in game text
 	 *
 	 */
-	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace;
+	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace, keyEscape;
 	Random random = new Random();
 	STATE state; 
 	OPTION option;
@@ -184,7 +174,7 @@ public class Judgement extends Game implements ActionListener
 		currentMap.accessTile(temp).drawBounds(Color.BLACK);
 		currentOverlay.accessTile(temp).drawBounds(Color.ORANGE);
 		Timer time = new Timer(30000, this);
-		time.start(); 		
+		time.start(); 
 	}
 	
 	/****************************************************************************
@@ -691,7 +681,10 @@ public class Judgement extends Game implements ActionListener
 				ya = ya - 1 - playerSpeed;
 				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
-			
+			if(keyEscape){
+				save.saveState(mapX, mapY);
+				System.exit(0);
+			}			
 			//No keys are pressed
 			if(!keyLeft && !keyRight && !keyUp && !keyDown) {
 				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
@@ -735,6 +728,10 @@ public class Judgement extends Game implements ActionListener
 					this.loadGame();
 					state = STATE.GAME;
 					setGameState(STATE.GAME);
+				}
+				if(keyEscape){
+					save.saveState(mapX, mapY);
+					System.exit(0);
 				}
 			}//end option none
 			
@@ -1023,6 +1020,9 @@ public class Judgement extends Game implements ActionListener
 	        case KeyEvent.VK_SPACE:
 	        	keySpace = true;
 	        	break;
+	        case KeyEvent.VK_ESCAPE:
+	        	keyEscape = true;
+	        	break;
         }
 	}
 
@@ -1074,6 +1074,9 @@ public class Judgement extends Game implements ActionListener
 	    case KeyEvent.VK_SPACE:
 	    	keySpace = false;
 	    	break;
+	    case KeyEvent.VK_ESCAPE:
+        	keyEscape = false;
+        	break;
 		}
 	}
 
@@ -1130,7 +1133,7 @@ public class Judgement extends Game implements ActionListener
 			mapY = Integer.parseInt(temp[2]);
 		 }
 		  catch (FileNotFoundException e) {
-			System.out.println("There was a problem loading the file");
+			System.out.println("No save file exists. A new file will be created.");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -123,6 +123,9 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		int winWidth = (int)screenSize.getWidth();
 		int winHeight = (int)screenSize.getHeight();
 		
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		setUndecorated(true);
+		
 		Dimension size = new Dimension(winWidth, winHeight);
 		setPreferredSize(size);
 		setSize(size);
@@ -152,7 +155,6 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
         addKeyListener(this);
         this.addMouseListener(this);
         addMouseMotionListener(this);
-
         //Start the game
         gameStartUp();
 	}
@@ -263,7 +265,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * Key Listener Methods
 	 * These methods apply the java methods to my personal more flexible ones
 	 *********************************************************************/
-	public void keyTyped(KeyEvent k) { setKeyChar(k.getKeyChar()); }
+	public void keyTyped(KeyEvent k) { setKeyChar(k.getKeyChar());}
     public void keyPressed(KeyEvent k) { gameKeyDown(k.getKeyCode()); }
     public void keyReleased(KeyEvent k) { gameKeyUp(k.getKeyCode()); }
     

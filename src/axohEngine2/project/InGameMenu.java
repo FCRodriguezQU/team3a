@@ -30,7 +30,7 @@ import javax.swing.JFrame;
 
 import axohEngine2.entities.ImageEntity;
 
-public class InGameMenu {
+public class InGameMenu  {
 
 	/**************
 	 * Variables
