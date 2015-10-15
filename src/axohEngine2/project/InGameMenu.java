@@ -218,11 +218,13 @@ public class InGameMenu {
 	public void render(JFrame frame, Graphics2D g2d, int inX, int inY) {
 		g2d.drawImage(_background.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString("Items", 120, 170);
-		g2d.drawString("Equipment", 120, 275);
-		g2d.drawString("Magic", 120, 385);
-		g2d.drawString("Status", 120, 490);
-		g2d.drawString("Save Game", 120, 600);
+		int x = SCREENWIDTH/7;
+		int y = (SCREENHEIGHT/6)+20;
+		g2d.drawString("Items", x, y);
+		g2d.drawString("Equipment", x-50, y+120);
+		g2d.drawString("Magic", x, y+250);
+		g2d.drawString("Status", x, y+390);
+		g2d.drawString("Save Game", x-80, y+520);
 		g2d.setColor(Color.YELLOW);
 		g2d.drawRect(inX, inY, 435, 104);
 		
@@ -370,7 +372,7 @@ public class InGameMenu {
 	//Setter for itemLocation - Reference blue code block above methods for description of variable
 	public void setItemLoc(int location) { itemLocation = location; }
 	
-	//Remember to update the item check under Item.java when adding a new group of items. All are handled seperately.
+	//Remember to update the item check under Item.java when adding a new group of items. All are handled separately.
 	//This method uses up an item based on its characteristics
 	public void useItem() { 
 		for(int i = 0; i < items.size(); i++){

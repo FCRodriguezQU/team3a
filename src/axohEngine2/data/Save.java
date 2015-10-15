@@ -1,9 +1,20 @@
+package axohEngine2.data;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+
+import axohEngine2.Game;
+import axohEngine2.entities.AnimatedSprite;
+
 /****************************************************************************************************
  * @author Travis R. Dewitt
  * @version 1.0
  * Date: June 15, 2015
- * 
- * 
+ *  * 
  * Title: Saving
  * Description: This class is used to correctly serialize objects, specifically the 'Data.java' class
  *  It also creates new files when needed.
@@ -11,55 +22,25 @@
  * This work is licensed under a Attribution-NonCommercial 4.0 International
  * CC BY-NC-ND license. http://creativecommons.org/licenses/by-nc/4.0/
  ****************************************************************************************************/
-//Packages
-package axohEngine2.data;
-
-//Imports
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 
 public class Save {
 	
-	//Needed serializing related object variables
-	private transient FileOutputStream file_out;
-	private transient ObjectOutputStream obj_out;
-	private transient PrintWriter writer;
-	private File newfile; 
+	Game game;
+	Data data;
 	
-	/********************************************************
-	 * Save the Game state
-	 * 
-	 * @param fileName - A string name of a file
-	 * @param data - 'Data.java' class object that holds the variables
-	 *********************************************************/
-	public void saveState(String fileName, Data data) {
+	public Save(Data d,Game g){
+		game = g;
+		data = d;
+	}
+	public void saveState(int x, int y){
 		try {
-			file_out = new FileOutputStream("C:/gamedata/saves/" + fileName);
-			obj_out = new ObjectOutputStream(file_out);
-			obj_out.writeObject(data);
-			obj_out.close();
-		} catch (IOException e) {
+			File file = new File("Save.txt");
+			PrintWriter write = new PrintWriter(file);
+			write.println(x + "," + y);
+			write.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("There was trouble saving the game.");
 			e.printStackTrace();
 		}
-	}
-	
-	/********************************************************
-	 * Create a new file in the system directory
-	 * 
-	 * @param file - A String
-	 ********************************************************/
-	public void newFile(String file) {
-		newfile = new File("C:/gamedata/saves/" + file);
-		newfile.getParentFile().mkdirs();
-		
-		try {
-			writer = new PrintWriter(newfile, "UTF-8");
-		} catch (Exception e) {
-			System.err.println("Unable to make new file...");
-		}
-		writer.close();
 	}
 }

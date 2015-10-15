@@ -43,7 +43,7 @@ import axohEngine2.project.STATE;
 import axohEngine2.util.Point2D;
 
 //Interface setup which implements needed java libraries
-abstract class Game extends JFrame implements Runnable, KeyListener, MouseListener, MouseMotionListener {
+public abstract class Game extends JFrame implements Runnable, KeyListener, MouseListener, MouseMotionListener {
 	//For serializing(Saving system)
 	private static final long serialVersionUID = 1L;
 
@@ -119,15 +119,19 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	public Game(int frameRate, int width, int height) 
 	{
 		//Set up JFrame window
-		Dimension size = new Dimension(width, height);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int winWidth = (int)screenSize.getWidth();
+		int winHeight = (int)screenSize.getHeight();
+		
+		Dimension size = new Dimension(winWidth, winHeight);
 		setPreferredSize(size);
 		setSize(size);
 		pack();
 		
 		//Store parameters in a variables
 		desiredRate = frameRate;
-		screenWidth = width;
-		screenHeight = height;
+		screenWidth = winWidth;
+		screenHeight = winHeight;
 		
 		//Set up backbuffer and graphics and synchronization
 		backBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_RGB);
@@ -142,13 +146,13 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
         
         //Initialize data related variables
         data = new Data();
-		save = new Save();
+		save = new Save(data,this);
         
 		//Add the listeners to the frame
         addKeyListener(this);
-        addMouseListener(this);
+        this.addMouseListener(this);
         addMouseMotionListener(this);
-        
+
         //Start the game
         gameStartUp();
 	}
@@ -161,7 +165,7 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	public Graphics2D graphics() { return g2d; }
 	
 	/*******************************************************
-	 * @return framerate - An Int pertaining to your games framerate
+	 * @return frame rate - An Int pertaining to your games framerate
 	 ******************************************************/
 	public int frameRate() { return _frameRate; }
 	
@@ -375,7 +379,8 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * @param e - MouseEvent that runs after being Clicked
      * Inherited Method
 	 *********************************************************************/
-	public void mouseClicked(MouseEvent e) { }
+	public void mouseClicked(MouseEvent e) { 
+	}
 	
 	/**********************************************************************
 	 * @param index - An int 1, 2, or 3
@@ -426,7 +431,7 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 	 * @param playerX - An Int
 	 * @param playerY - An Int
 	 *******************************************************************************/
-	protected void updateData(Map currentMap, Map currentOverlay, int playerX, int playerY) {
+	public void updateData(Map currentMap, Map currentOverlay, int playerX, int playerY) {
 		data.update(currentMap.mapName(), currentOverlay.mapName(), playerX, playerY);
 	}
 	
@@ -450,7 +455,6 @@ abstract class Game extends JFrame implements Runnable, KeyListener, MouseListen
 			{
 				playerCharacter = _sprites.get(i);
 			}
-			
 
 			AnimatedSprite spr1 = _sprites.get(i);
 			//System.out.println(spr1._name);

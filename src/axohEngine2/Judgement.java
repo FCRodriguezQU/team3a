@@ -17,11 +17,23 @@ package axohEngine2;
 
 //Imports
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.Random;
 import java.math.*;
 
@@ -41,7 +53,7 @@ import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
 
 //Start class by also extending the 'Game.java' engine interface
-public class Judgement extends Game 
+public class Judgement extends Game
 {
 	//For serializing (The saving system)
 	private static final long serialVersionUID = 1L;
@@ -52,12 +64,15 @@ public class Judgement extends Game
 	 * SCREENHEIGHT - Game window height
 	 * CENTERX/CENTERY - Center of the game window's x/y
 	 */
-	static int SCREENWIDTH = 1600;
-	static int SCREENHEIGHT = 900;
+	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	static int width = (int)screenSize.getWidth();
+	static int height = (int)screenSize.getHeight();
+	static int SCREENWIDTH = width;
+	static int SCREENHEIGHT = height;
 	static int CENTERX = SCREENWIDTH / 2;
 	static int CENTERY = SCREENHEIGHT / 2;
 	
-	/*--------- Miscelaneous ---------
+	/*--------- Miscellaneous ---------
 	 *booleans - A way of detecting a pushed key in game
 	 *random - Use this to generate a random number
 	 *state - Game states used to show specific info ie. pause/running
@@ -111,7 +126,7 @@ public class Judgement extends Game
 	 * currentFile - Name of the currently loaded file
 	 * wasSaving/wait/waitOn - Various waiting variables to give the player time to react to whats happening on screen
 	 */
-	private int inX = 90, inY = 90;
+	private int inX = SCREENWIDTH/10-50, inY = 120;
 	private int inLocation;
 	private int sectionLoc;
 	private int titleX = 530, titleY = 610;
@@ -182,8 +197,8 @@ public class Judgement extends Game
 		mapX = startPosX;
 		mapY = startPosY;
 		scale = 4;
-		playerSpeed = 3;
-		
+		playerSpeed = 5;
+		this.loadGame();
 		//****Initialize spriteSheets*********************************************************************
 		extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
@@ -299,8 +314,8 @@ public class Judgement extends Game
 			inMenu.update(option, sectionLoc, playerMob.health()); //In Game Menu update
 		}
 		
-		updateData(currentMap, currentOverlay, playerX, playerY); //Update the current file data for saving later
-		//System.out.println("The framerate is : " + frameRate()); //Print the current framerate to the console
+		this.updateData(currentMap, currentOverlay, playerX, playerY);//Update the current file data for saving later
+		//System.out.println("The framerate is : " + frameRate()); //Print the current frame rate to the console
 		if(waitOn) wait--;
 	}
 	
@@ -320,7 +335,7 @@ public class Judgement extends Game
 		Graphics2D g2d = graphics();
 		g2d.clearRect(0, 0, SCREENWIDTH, SCREENHEIGHT); 
 		g2d.setFont(simple);
-		
+
 		//GUI rendering for when a specific state is set, only specific groups of data is drawn at specific times
 		if(state == STATE.GAME) 
 		{
@@ -345,16 +360,14 @@ public class Judgement extends Game
 		if(state == STATE.TITLE) 
 		{
 			//Render the title screen
-			title.render(this, g2d, titleX, titleY, titleX2, titleY2);
+			title.render(this, g2d);
 		}
 		
 		//Render save time specific writing
 		if(option == OPTION.SAVE)
 		{
-			drawString(g2d, "Are you sure you\n      would like to save?", 660, 400);
-		}
-		if(wasSaving && wait > 0) {
-			g2d.drawString("Game Saved!", 700, 500);
+			save.saveState(mapX,mapY);
+			drawString(g2d, "Saved", 700, 500);
 		}
 	}
 	
@@ -364,7 +377,8 @@ public class Judgement extends Game
 	 * been set up to go off at specific times in a game as events.
 	 * Actions that need to be done during these times can be added here.
 	 ******************************************************************/
-	void gameShutDown() {		
+	void gameShutDown() {	
+		save.saveState(mapX, mapY);
 	}
 
 	void spriteUpdate(AnimatedSprite sprite) 
@@ -621,7 +635,10 @@ public class Judgement extends Game
 	 * 
 	 * @param args
 	 ********************************************************/
-	public static void main(String[] args) { new Judgement(); }
+	public static void main(String[] args) { 
+		
+		new Judgement(); 
+		}
 	
 	/**********************************************************
 	 * The Depths of Judgement Lies Below
@@ -691,12 +708,9 @@ public class Judgement extends Game
 			if(option == OPTION.NONE){
 				//S or down arrow(Change selection)
 				if(keyDown && titleLocation < 1) {
-					titleX -= 105;
-					titleY += 100;
-					titleLocation++;
-					inputWait = 5;
+					
 				}
-				//W or up arrow(Chnage selection
+				//W or up arrow(Change selection
 				if(keyUp && titleLocation > 0){
 					titleX += 105;
 					titleY -= 100;
@@ -706,17 +720,16 @@ public class Judgement extends Game
 				//Enter key(Make a choice)
 				if(keyEnter) {
 					if(titleLocation == 0){
-						option = OPTION.NEWGAME;
-						titleLocation = 0;
-						inputWait = 10;
-						keyEnter = false;
+						state = STATE.GAME;
+						setGameState(STATE.GAME);
 					}
-					if(titleLocation == 1){
+					/*if(titleLocation == 1){
 						option = OPTION.LOADGAME;
 						titleLocation = 0;
 						inputWait = 5;
 						keyEnter = false;
 					}
+					*/
 				}
 			}//end option none
 			
@@ -789,7 +802,6 @@ public class Judgement extends Game
 					}
 					//Enter key(Write the file using the currently typed name and save it)
 					if(keyEnter && title.getFileName().length() > 0) {
-						save.newFile(title.getFileName());
 						title.setGetName(false);
 						currentFile = title.getFileName();
 						state = STATE.GAME;
@@ -813,13 +825,14 @@ public class Judgement extends Game
 				inY = 90;
 				inputWait = 8;
 			}
+			int boxChangeY = 130;
 			//No option is chosen yet
 			if(option == OPTION.NONE){ 
 				if(wait == 0) wasSaving = false;
 				//W or up arrow(Move selection)
 				if(keyUp) {
 					if(inLocation > 0) {
-						inY -= 108;
+						inY -= boxChangeY;
 						inLocation--;
 						inputWait = 10;
 					}
@@ -827,7 +840,7 @@ public class Judgement extends Game
 				//S or down arrow(move selection)
 				if(keyDown) {
 					if(inLocation < 4) {
-						inY += 108;
+						inY += boxChangeY;
 						inLocation++;
 						inputWait = 10;
 					}
@@ -907,7 +920,7 @@ public class Judgement extends Game
 			if(option == OPTION.SAVE){
 				//Key enter(Save the file)
 				if(keyEnter){
-					save.saveState(currentFile, data());
+					save.saveState(mapX,mapY);
 					inputWait = 20;
 					wait = 200;
 					waitOn = true;
@@ -1093,26 +1106,30 @@ public class Judgement extends Game
 	 * Currently only the player x and y location and the current map is saved
 	 */
 	 void loadGame() {
-		 if(currentFile != "") {
-			 System.out.println("Loading...");
-			 loadData(currentFile);
-			 tiles().clear();
-			 sprites().clear();
-			 for(int i = 0; i < mapBase.maps.length; i++){
-				 if(mapBase.getMap(i) == null) continue;
-				 if(data().getMapName() == mapBase.getMap(i).mapName()) currentMap = mapBase.getMap(i);
-				 if(data().getOverlayName() == mapBase.getMap(i).mapName()) currentOverlay = mapBase.getMap(i);
-			 }
-			 playerX = data().getPlayerX();
-			 playerY = data().getPlayerY();
-			 sprites().add(playerMob);
-			 for(int i = 0; i < currentMap.getWidth() * currentMap.getHeight(); i++){
-					addTile(currentMap.accessTile(i));
-					addTile(currentOverlay.accessTile(i));
-					if(currentMap.accessTile(i).hasMob()) sprites().add(currentMap.accessTile(i).mob());
-					if(currentOverlay.accessTile(i).hasMob()) sprites().add(currentOverlay.accessTile(i).mob());
-			}//end for
-			System.out.println("Load Successful");
-		 } //end file is not empty check
+		 File file = new File("Save.txt");
+		 String[] temp = new String[3];
+		 int x = 0;
+		 int y = 0;
+		 try {
+	        FileReader fileReader = new FileReader(file);
+	        BufferedReader bufferedReader = new BufferedReader(fileReader);
+	        temp = bufferedReader.readLine().trim().split(",");
+			System.out.println("HELLO" + temp[0] + "," + temp[1]);
+			
+			mapX = Integer.parseInt(temp[0]);
+			mapY = Integer.parseInt(temp[1]);
+		} catch (FileNotFoundException e) {
+			System.out.println("There was a problem loading the file");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	 } //end load method
+	 
+	 public int getPlayerX(){
+		 return playerX;
+	 }
+	 public int getPlayerY(){
+		 return playerY;
+	 }	 
 } //end class

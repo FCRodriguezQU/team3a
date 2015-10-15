@@ -50,7 +50,7 @@ public class TitleMenu {
 	private AnimatedSprite _titleArrow;
 	private OPTION _option;
 	
-	//Fonts to be used to display text, variouse ones for various uses
+	//Fonts to be used to display text, various ones for various uses
 	private Font _simple;
 	private Font _bold;
 	private Font _bigBold;
@@ -72,7 +72,7 @@ public class TitleMenu {
 	 * @param bigBold - The font to use for big loud remarks, very bold
 	 *******************************************************************/
 	public TitleMenu(ImageEntity mainImage, ImageEntity secondary,AnimatedSprite titleArrow, int screenWidth, int screenHeight, Font simple, Font bold, Font bigBold) {
-		existingFiles = new File("C:/gamedata/saves/");
+		existingFiles = new File("Saves/");
 		_mainImage = mainImage;
 		_secondary = secondary;
 		_titleArrow = titleArrow;
@@ -94,16 +94,16 @@ public class TitleMenu {
 	 * @param titleX2 - x position of the arrow once a choice is made
 	 * @param titleY2 - y position of the arrow once a choice has been made
 	 ****************************************************************************/
-	public void render(JFrame frame, Graphics2D g2d, int titleX, int titleY, int titleX2, int titleY2) {
+	public void render(JFrame frame, Graphics2D g2d) {
 		g2d.drawImage(_mainImage.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Color.WHITE);
 		g2d.setFont(_bold);
-		g2d.drawString("New Game", 660, 700);
-		g2d.drawString("Load Game", 560, 800);
+		g2d.drawString("Start Game", SCREENWIDTH/3, SCREENHEIGHT-(SCREENHEIGHT/4));
+		//g2d.drawString("Load Game", 560, 800);
 		g2d.setColor(Color.YELLOW);
 		g2d.setFont(_bigBold);
-		drawString(g2d, "The\n   Judgement", 500, 100);
-		g2d.drawImage(_titleArrow.getImage(), titleX, titleY, _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
+		drawString(g2d, "The Judgement", SCREENWIDTH/3, (SCREENHEIGHT/4));
+		g2d.drawImage(_titleArrow.getImage(), SCREENWIDTH/4, SCREENHEIGHT-(SCREENHEIGHT/3), _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
 		
 		if(_option == OPTION.NEWGAME || _option == OPTION.LOADGAME){
 			g2d.setColor(Color.BLACK);
@@ -121,7 +121,7 @@ public class TitleMenu {
 			if(_option == OPTION.LOADGAME) {
 				g2d.drawString("Load Game", 620, 190); 
 			}
-			g2d.drawImage(_titleArrow.getImage(), titleX2, titleY2, _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
+			//g2d.drawImage(_titleArrow.getImage(), titleX2, titleY2, _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
 		}
 	}
 	
