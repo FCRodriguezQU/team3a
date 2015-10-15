@@ -683,6 +683,7 @@ public class Judgement extends Game implements ActionListener
 			}
 			if(keyEscape){
 				save.saveState(mapX, mapY);
+				System.out.println("Game saved successfully");
 				System.exit(0);
 			}			
 			//No keys are pressed
