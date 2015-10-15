@@ -1136,6 +1136,10 @@ public class Judgement extends Game implements ActionListener
 			mapX = Integer.parseInt(temp[1]);
 			mapY = Integer.parseInt(temp[2]);
 	        }
+	        
+	        if(temp[1].equals(null)){
+	        	playerName = JOptionPane.showInputDialog("Enter your name:");
+	        }
 		 }
 		  catch (FileNotFoundException e) {
 			System.out.println("There was a problem loading the file");
