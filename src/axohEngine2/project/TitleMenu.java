@@ -49,7 +49,7 @@ public class TitleMenu {
 	private ImageEntity _secondary;
 	private AnimatedSprite _titleArrow;
 	private OPTION _option;
-	
+	private String name = "";
 	//Fonts to be used to display text, various ones for various uses
 	private Font _simple;
 	private Font _bold;
@@ -107,22 +107,23 @@ public class TitleMenu {
 		g2d.drawImage(_titleArrow.getImage(), SCREENWIDTH/3-20, SCREENHEIGHT-(SCREENHEIGHT/3), _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
 		
 		if(_option == OPTION.NEWGAME || _option == OPTION.LOADGAME){
-			g2d.setColor(Color.BLACK);
+			g2d.setColor(Color.WHITE);
 			g2d.setFont(_simple);
 			g2d.drawImage(_secondary.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-			if(files != null){
+			/*if(files != null){
 				for(int i = 0; i < files.length; i++){
 					g2d.drawString(files[i], 540, 388 + i * 165);
 				}
-			}
+			}*/
 			if(_option == OPTION.NEWGAME) {
-				g2d.drawString("New Game", 620, 190); 
-				g2d.drawString(_fileName, 540, 388 + location * 165);
+				g2d.drawString("New Game", 620, 230); 
+				g2d.drawString(_fileName, 540, 500);
 			}
+			/*
 			if(_option == OPTION.LOADGAME) {
 				g2d.drawString("Load Game", 620, 190); 
-			}
-			//g2d.drawImage(_titleArrow.getImage(), titleX2, titleY2, _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
+			}*/
+			g2d.drawImage(_titleArrow.getImage(), 380, 400, _titleArrow.getSpriteSize(), _titleArrow.getSpriteSize(), frame);
 		}
 	}
 	
@@ -154,6 +155,7 @@ public class TitleMenu {
 		if(currentChar == '\b') return;
 		if(currentChar == '\n') return;
 		if(_fileName.length() < 11) _fileName += currentChar;
+		name += currentChar;
 	}
 	
 	/******************************************************************************
@@ -161,6 +163,7 @@ public class TitleMenu {
 	 ******************************************************************************/
 	public void deleteChar() {
 		if(_fileName.length() > 0) _fileName = _fileName.substring(0, _fileName.length() - 1);
+		 name = name.substring(0, name.length() - 1);
 	}
 	
 	/*****************************************************************************
@@ -187,7 +190,7 @@ public class TitleMenu {
 		return "";
 	}
 	
-	//Getters for _fileName, files(The array), and is the syetm is in getName state
+	//Getters for _fileName, files(The array), and is the system is in getName state
 	public String getFileName() { return _fileName; }
 	public String[] files() { return files; }
 	public boolean isGetName() { return getName; }
@@ -209,4 +212,7 @@ public class TitleMenu {
        for (String line : text.split("\n"))
            g2d.drawString(line, x, y += g2d.getFontMetrics().getHeight());
     }
+	public String getName(){
+		return name;
+	}
 }

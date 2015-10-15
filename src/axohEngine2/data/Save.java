@@ -34,7 +34,7 @@ public class Save {
 	}
 	public void saveState(int x, int y){
 		try {
-			File file = new File("Save.txt");
+			File file = new File("Save.csv");
 			PrintWriter write = new PrintWriter(file);
 			write.println(data.getName() + "," + x + "," + y);
 			write.close();

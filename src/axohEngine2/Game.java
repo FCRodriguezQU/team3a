@@ -250,25 +250,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		gameloop = null;
 		gameShutDown();
 	}
-	
-	/***********************************************************
-	 * @param fileName - A string filename
-	 * The file given is the loaded as the current game state
-	 * This method never needs to be touched as the only thing that is serialized is the 'data.java' class
-	 * To access the loaded data, use 'data' the variable
-	 ***********************************************************/
-	public void loadData(String fileName) {
-		FileInputStream file_in = null;
-		ObjectInputStream reader = null;
-		Object obj = null;
-		try {
-			file_in = new FileInputStream("C:/gamedata/saves/" + fileName);
-			reader = new ObjectInputStream (file_in);
-			System.out.println("Load successful.");
-			obj = reader.readObject();
-		} catch(IOException | ClassNotFoundException e) {}
-		if(obj instanceof Data) data = (Data) obj;
-	}
+
 	
 	/**********************************************************************
 	 * @return Data

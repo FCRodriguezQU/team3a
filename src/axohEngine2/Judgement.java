@@ -39,9 +39,12 @@ import java.io.PrintWriter;
 import java.util.Random;
 import java.math.*;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+
+import com.sun.prism.Image;
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.ImageEntity;
@@ -75,14 +78,14 @@ public class Judgement extends Game implements ActionListener
 	static int SCREENHEIGHT = height;
 	static int CENTERX = SCREENWIDTH / 2;
 	static int CENTERY = SCREENHEIGHT / 2;
-	static String playerName = null;
+	String playerName = null;
 	
 	/*--------- Miscellaneous ---------
 	 *booleans - A way of detecting a pushed key in game
 	 *random - Use this to generate a random number
 	 *state - Game states used to show specific info ie. pause/running
 	 *option - In game common choices at given times
-	 *Fonts - Variouse font sizes in the Arial style for different in game text
+	 *Fonts - Various font sizes in the Arial style for different in game text
 	 *
 	 */
 	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace;
@@ -174,13 +177,14 @@ public class Judgement extends Game implements ActionListener
 	public Judgement() 
 	{
 		super(130, SCREENWIDTH, SCREENHEIGHT);
+		ImageIcon img = new ImageIcon("/textures/extras/extras1.png");
+		setIconImage(img.getImage());
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		currentMap.accessTile(temp).drawBounds(Color.BLACK);
 		currentOverlay.accessTile(temp).drawBounds(Color.ORANGE);
-
-		Timer time = new Timer(10000, this);
-		time.start(); 
+		Timer time = new Timer(30000, this);
+		time.start(); 		
 	}
 	
 	/****************************************************************************
@@ -206,7 +210,6 @@ public class Judgement extends Game implements ActionListener
 		mapY = startPosY;
 		scale = 4;
 		playerSpeed = 5;
-		this.loadGame();
 		//****Initialize spriteSheets*********************************************************************
 		extras1 = new SpriteSheet("/textures/extras/extras1.png", 8, 8, 32, scale);
 		mainCharacter = new SpriteSheet("/textures/characters/mainCharacter.png", 8, 8, 32, scale);
@@ -376,7 +379,7 @@ public class Judgement extends Game implements ActionListener
 		{
 			save.saveState(mapX,mapY);
 			g2d.setFont(new Font("TimesRoman", Font.BOLD, 110));
-			drawString(g2d, "Saved", SCREENWIDTH/4*2, 500);
+			drawString(g2d, (playerName + "'s game\n was saved." ), SCREENWIDTH/4*2, 450);
 		}
 	}
 	
@@ -729,17 +732,9 @@ public class Judgement extends Game implements ActionListener
 				}
 				//Enter key(Make a choice)
 				if(keyEnter) {
-					if(titleLocation == 0){
-						state = STATE.GAME;
-						setGameState(STATE.GAME);
-					}
-					/*if(titleLocation == 1){
-						option = OPTION.LOADGAME;
-						titleLocation = 0;
-						inputWait = 5;
-						keyEnter = false;
-					}
-					*/
+					this.loadGame();
+					state = STATE.GAME;
+					setGameState(STATE.GAME);
 				}
 			}//end option none
 			
@@ -1117,29 +1112,22 @@ public class Judgement extends Game implements ActionListener
 	 * Currently only the player x and y location and the current map is saved
 	 */
 	 void loadGame() {
-		 File file = new File("Save.txt");
+		 File file = new File("Save.csv");
+		 if(file.exists()){
 		 String[] temp = new String[3];
 		 int x = 0;
 		 int y = 0;
-		 
 		 try {
 	        FileReader fileReader = new FileReader(file);
 	        BufferedReader bufferedReader = new BufferedReader(fileReader);
 	        String read = bufferedReader.readLine().trim();
 	        bufferedReader.close();
-	        if(read.equals(null) || read.isEmpty()){
-	        	
-	        }
-	        else{
+	        
 	        temp = read.split(",");
 	        playerName = temp[0];
+	        data.setName(playerName);
 			mapX = Integer.parseInt(temp[1]);
 			mapY = Integer.parseInt(temp[2]);
-	        }
-	        
-	        if(temp[1].equals(null)){
-	        	playerName = JOptionPane.showInputDialog("Enter your name:");
-	        }
 		 }
 		  catch (FileNotFoundException e) {
 			System.out.println("There was a problem loading the file");
@@ -1148,11 +1136,14 @@ public class Judgement extends Game implements ActionListener
 			e.printStackTrace();
 		}
 		 catch(NullPointerException e){
-			System.out.println("The save file is empty. Setting player to default location.");
-			playerName = JOptionPane.showInputDialog("Enter your name:");
-			data.setName(playerName);
-			mapX = -10;
-	        mapY = -150;
+			System.out.println("NullPointerException: Player will be set to default location.");
+		 }
+		 }
+		 else{
+			    playerName = JOptionPane.showInputDialog("Enter your name:");
+			    data.setName(playerName);
+				mapX = -10;
+		        mapY = -150;
 		 }
 
 	 } //end load method
