@@ -367,7 +367,8 @@ public class Judgement extends Game
 		if(option == OPTION.SAVE)
 		{
 			save.saveState(mapX,mapY);
-			drawString(g2d, "Saved", 700, 500);
+			g2d.setFont(new Font("TimesRoman", Font.BOLD, 110));
+			drawString(g2d, "Saved", SCREENWIDTH/4*2, 500);
 		}
 	}
 	
@@ -822,7 +823,7 @@ public class Judgement extends Game
 				state = STATE.GAME;
 				option = OPTION.NONE;
 				inLocation = 0;
-				inY = 90;
+				inY = 130;
 				inputWait = 8;
 			}
 			int boxChangeY = 130;
@@ -935,6 +936,7 @@ public class Judgement extends Game
 				inMenu.setItemLoc(0);
 				sectionLoc = 0;
 				inputWait = 8;
+				inY = 130;
 				keyBack = false;
 			}
 			//Backspace(if a choice has not been made, this closes the inventory)
@@ -943,7 +945,7 @@ public class Judgement extends Game
 				option = OPTION.NONE;
 				inLocation = 0;
 				sectionLoc = 0;
-				inY = 90;
+				inY = 130;
 				inputWait = 8;
 			}
 		}

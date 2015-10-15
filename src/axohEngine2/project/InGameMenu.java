@@ -21,6 +21,7 @@ package axohEngine2.project;
 
 //Imports
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.Random;
@@ -44,7 +45,9 @@ public class InGameMenu {
 	private int SCREENWIDTH;
 	private int SCREENHEIGHT;
 	private Random random = new Random();
-	
+	private Font titleFont = new Font("TimesRoman", Font.BOLD, 110);
+	private Font menuFont = new Font("TimesRoman", Font.BOLD, 80);
+	private	Font defaultFont;
 	//items - A list of items contained in the menu
 	//equipment - A list of equipment contained in the menu
 	//counts - An array of totals of items grouped together currently in inventory
@@ -74,6 +77,7 @@ public class InGameMenu {
 	private int experience;
 	private int nextLevel = 20;
 	private int nextExp = 25;
+	
 	
 	/********************************************************************************************
 	 * The Items algorithms need an explanation, starting with:
@@ -217,7 +221,8 @@ public class InGameMenu {
 	//Reference blue code block above methods
 	public void render(JFrame frame, Graphics2D g2d, int inX, int inY) {
 		g2d.drawImage(_background.getImage(), 0, 0, SCREENWIDTH, SCREENHEIGHT, frame);
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Color.WHITE);
+		defaultFont = g2d.getFont();
 		int x = SCREENWIDTH/7;
 		int y = (SCREENHEIGHT/6)+20;
 		g2d.drawString("Items", x, y);
@@ -229,35 +234,46 @@ public class InGameMenu {
 		g2d.drawRect(inX, inY, 435, 104);
 		
 		if(_option == OPTION.ITEMS){
-			g2d.setColor(Color.BLACK);
-			g2d.drawString("Items", 920, 200);
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(titleFont);
+			g2d.drawString("Items", SCREENWIDTH/2-100, SCREENHEIGHT/5);
 			renderItems(frame, g2d, shownItems, items);
+			g2d.setFont(menuFont);
 		}
 		
 		if(_option == OPTION.EQUIPMENT){
-			g2d.setColor(Color.BLACK);
-			g2d.drawString("Equipment", 900, 200);
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(titleFont);
+			g2d.drawString("Equipment", SCREENWIDTH/2-100, SCREENHEIGHT/5);
+			g2d.setFont(menuFont);
 			renderItems(frame, g2d, shownEquipment, equipment);
 		}
 		
 		if(_option == OPTION.MAGIC){
-			g2d.setColor(Color.BLACK);
-			g2d.drawString("Magic", 880, 200);
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(titleFont);
+			g2d.drawString("Magic", SCREENWIDTH/2-100, SCREENHEIGHT/5);
+			g2d.setFont(menuFont);
 		}
 		
 		if(_option == OPTION.STATUS){
-			g2d.setColor(Color.BLACK);
-			g2d.drawString("Status", 920, 200);
-			g2d.drawString("Level: " + level, 600, 375);
-			g2d.drawString("Attack: " + attack, 600, 475);
-			g2d.drawString("Defense: " + defense, 600, 575);
-			g2d.drawString("Health: " + currHealth, 600, 675);
-			g2d.drawString("Experience: " + experience + " / " + nextLevel, 600, 775);
+			g2d.setColor(Color.WHITE);
+			int h = 440;
+			g2d.setFont(titleFont);
+			g2d.drawString("Status", SCREENWIDTH/2-100, SCREENHEIGHT/5);
+			g2d.setFont(menuFont);
+			g2d.drawString("Level: " + level, SCREENWIDTH/2-100, h);
+			g2d.drawString("Attack: " + attack, SCREENWIDTH/2-100, h+100);
+			g2d.drawString("Defense: " + defense, SCREENWIDTH/2-100, h+200);
+			g2d.drawString("Health: " + currHealth, SCREENWIDTH/2-100, h+300);
+			g2d.drawString("Experience: " + experience + " / " + nextLevel, SCREENWIDTH/2-100, h+400);
 		}
 		
 		if(_option == OPTION.SAVE){
-			g2d.setColor(Color.BLACK);
-			g2d.drawString("Save Game", 880, 200);
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(titleFont); 
+			g2d.drawString("Save Game", SCREENWIDTH/2-100, SCREENHEIGHT/5);
+			g2d.setFont(menuFont);
 		}
 	}
 	
@@ -272,12 +288,14 @@ public class InGameMenu {
 				if(i == array.length - 1) break;
 				continue;
 			}
+			g2d.setFont(new Font("Arial", Font.PLAIN, 70));
 			g2d.setColor(Color.YELLOW);
-			if(!list.isEmpty()) g2d.drawLine(670, 410 + sectionLoc * 110, 670 + array[i].getName().length() * 37, 410 + sectionLoc * 110);
-			g2d.setColor(Color.BLACK);
-			g2d.drawString(array[i].getName(), 670, 400 + y * 110);
-			g2d.drawString(" x " + new Integer(counts[i]).toString(), 700 + array[i].getName().length() * 37,  400 + y * 110);
-			array[i].render(frame, g2d, 600, 340 + y * 110);
+			if(!list.isEmpty()) g2d.drawLine(SCREENWIDTH/3+120,510 + sectionLoc * 110, 670 + array[i].getName().length() * 70 + 200, 510 + sectionLoc * 110);
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(new Font("Arial", Font.PLAIN, 70));
+			g2d.drawString(array[i].getName(), SCREENWIDTH/3+120, 500 + y * 110);
+			g2d.drawString(" x " + new Integer(counts[i]).toString(), SCREENWIDTH/3 + (array[i].getName().length()*70),  500 + y * 110);
+			array[i].render(frame, g2d, SCREENWIDTH/3+50, 450 + y * 110);
 			y++;
 		}
 	}

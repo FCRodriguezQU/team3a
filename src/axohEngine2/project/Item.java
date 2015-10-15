@@ -12,6 +12,7 @@
 //Package
 package axohEngine2.project;
 
+import java.awt.Font;
 //Imports
 import java.awt.Graphics2D;
 
@@ -68,6 +69,7 @@ public class Item extends Sprite{
 	 * @param y - y position of the item on screen
 	 *****************************************/
 	public void render(JFrame frame, Graphics2D g2d, int x, int y) {
+		g2d.setFont(new Font("Arial", Font.PLAIN, 72));
 		g2d.drawImage(getImage(), x, y, getSpriteSize(), getSpriteSize(), frame);
 	}
 	
