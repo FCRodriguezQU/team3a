@@ -25,6 +25,7 @@ public class Data implements Serializable {
 	private String _currentOverlayName;
 	private int _playerX;
 	private int _playerY;
+	private String name;
 	
 	//Method used to update the private variables
 	public void update(String currentMapName, String currentOverlayName, int playerX, int playerY){
@@ -60,5 +61,12 @@ public class Data implements Serializable {
 	 ***************************************************/
 	public int getPlayerY() {
 		return _playerY;
+	}
+	
+	public void setName(String n){
+		name = n.trim();
+	}
+	public String getName(){
+		return name;
 	}
 }

@@ -36,7 +36,7 @@ public class Save {
 		try {
 			File file = new File("Save.txt");
 			PrintWriter write = new PrintWriter(file);
-			write.println(x + "," + y);
+			write.println(data.getName() + "," + x + "," + y);
 			write.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("There was trouble saving the game.");

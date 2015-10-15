@@ -23,6 +23,8 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,6 +40,8 @@ import java.util.Random;
 import java.math.*;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import axohEngine2.entities.AnimatedSprite;
 import axohEngine2.entities.ImageEntity;
@@ -53,7 +57,7 @@ import axohEngine2.project.TYPE;
 import axohEngine2.project.TitleMenu;
 
 //Start class by also extending the 'Game.java' engine interface
-public class Judgement extends Game
+public class Judgement extends Game implements ActionListener
 {
 	//For serializing (The saving system)
 	private static final long serialVersionUID = 1L;
@@ -71,6 +75,7 @@ public class Judgement extends Game
 	static int SCREENHEIGHT = height;
 	static int CENTERX = SCREENWIDTH / 2;
 	static int CENTERY = SCREENHEIGHT / 2;
+	static String playerName = null;
 	
 	/*--------- Miscellaneous ---------
 	 *booleans - A way of detecting a pushed key in game
@@ -173,6 +178,9 @@ public class Judgement extends Game
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		currentMap.accessTile(temp).drawBounds(Color.BLACK);
 		currentOverlay.accessTile(temp).drawBounds(Color.ORANGE);
+
+		Timer time = new Timer(10000, this);
+		time.start(); 
 	}
 	
 	/****************************************************************************
@@ -343,13 +351,13 @@ public class Judgement extends Game
 			currentMap.render(this, g2d, mapX, mapY);
 			currentOverlay.render(this, g2d, mapX, mapY);
 			playerMob.renderMob(CENTERX - playerX, CENTERY - playerY);
-			g2d.setColor(Color.GREEN);
+			g2d.setColor(Color.RED);
 			g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 780, CENTERY - 350);
 			g2d.setColor(Color.BLUE);
 			g2d.drawString("Magic: " + inMenu.getMagic(), CENTERX - 280, CENTERY - 350);
 			g2d.setColor(Color.YELLOW);
-			g2d.drawString("NPC health: " + currentOverlay.accessTile(98).mob().health(), CENTERX + 200, CENTERY - 350);
-		}
+			g2d.drawString("Player: " + playerName, CENTERX + 200, CENTERY - 350);
+		} 
 		if(state == STATE.INGAMEMENU)
 		{
 			//Render the in game menu and specific text
@@ -426,32 +434,32 @@ public class Judgement extends Game
 			double shiftX = 0;
 			double shiftY = 0;
 			
-			System.out.println("Smallest Overlap : " + smallestOverlap);
-			System.out.println("Right Overlap : " + rightOverlap);
-			System.out.println("Top Overlap : " + topOverlap);
-			System.out.println("Bottun Overlap : " + botOverlap);
+			//System.out.println("Smallest Overlap : " + smallestOverlap);
+			//System.out.println("Right Overlap : " + rightOverlap);
+			//System.out.println("Top Overlap : " + topOverlap);
+			//System.out.println("Bottun Overlap : " + botOverlap);
 	
 			if(leftOverlap < smallestOverlap) { //Left
 				smallestOverlap = leftOverlap;
 				shiftX -= leftOverlap; 
-				System.out.println("Thing 1");
+				//System.out.println("Thing 1");
 				shiftY = 0;
 			}
 			if(rightOverlap < smallestOverlap){ //right
 				smallestOverlap = rightOverlap;
-				System.out.println("Thing 2");
+				//System.out.println("Thing 2");
 				shiftX = rightOverlap;
 				shiftY = 0;
 			}
 			if(topOverlap < smallestOverlap){ //up
 				smallestOverlap = topOverlap;
-				System.out.println("Thing 3");
+				//System.out.println("Thing 3");
 				shiftX = 0;
 				shiftY -= topOverlap;
 			}
 			if(botOverlap < smallestOverlap){ //down
 				smallestOverlap = botOverlap;
-				System.out.println("Thing 4");
+				//System.out.println("Thing 4");
 				shiftX = 0;
 				shiftY = botOverlap;
 			}
@@ -494,7 +502,7 @@ public class Judgement extends Game
 	*************************************************************************/
 	void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2) 
 	{
-			System.out.println("Hit direction was : " + spr.getBoundX(hitDir));
+			//System.out.println("Hit direction was : " + spr.getBoundX(hitDir));
 			double leftOverlap = (spr.getBoundX(hitDir) + spr.getBoundSize() - tile.getBoundX(hitDir2));
 			double rightOverlap = (tile.getBoundX(hitDir2) + tile.getBoundSize() - spr.getBoundX(hitDir));
 			double topOverlap = (spr.getBoundY(hitDir) + spr.getBoundSize() - tile.getBoundY(hitDir2));
@@ -503,11 +511,11 @@ public class Judgement extends Game
 			double shiftX = 0;
 			double shiftY = 0;
 			
-			System.out.println("Smallest Overlap : " + smallestOverlap);
-			System.out.println("Left Overlap : " + leftOverlap);
-			System.out.println("Right Overlap : " + rightOverlap);
-			System.out.println("Top Overlap : " + topOverlap);
-			System.out.println("Bottun Overlap : " + botOverlap);
+			//System.out.println("Smallest Overlap : " + smallestOverlap);
+			//System.out.println("Left Overlap : " + leftOverlap);
+			//System.out.println("Right Overlap : " + rightOverlap);
+			//System.out.println("Top Overlap : " + topOverlap);
+			//System.out.println("Button Overlap : " + botOverlap);
 	
 	
 			if(leftOverlap < smallestOverlap) 
@@ -582,6 +590,7 @@ public class Judgement extends Game
 				if(spr.spriteType() == TYPE.PLAYER && tile.event().getEventType() == TYPE.ITEM && keyAction){
 					if((tile._name).equals("chest")) tile.setFrame(tile.getSpriteNumber() + 1); //Chests should have opened and closed version next to each other
 					inMenu.addItem(tile.event().getItem()); //Add item to inventory
+					System.out.println(tile.event().getname());
 					tile.endEvent();
 				}
 			}//end check events
@@ -1112,20 +1121,36 @@ public class Judgement extends Game
 		 String[] temp = new String[3];
 		 int x = 0;
 		 int y = 0;
+		 
 		 try {
 	        FileReader fileReader = new FileReader(file);
 	        BufferedReader bufferedReader = new BufferedReader(fileReader);
-	        temp = bufferedReader.readLine().trim().split(",");
-			System.out.println("HELLO" + temp[0] + "," + temp[1]);
-			
-			mapX = Integer.parseInt(temp[0]);
-			mapY = Integer.parseInt(temp[1]);
-		} catch (FileNotFoundException e) {
+	        String read = bufferedReader.readLine().trim();
+	        bufferedReader.close();
+	        if(read.equals(null) || read.isEmpty()){
+	        	
+	        }
+	        else{
+	        temp = read.split(",");
+	        playerName = temp[0];
+			mapX = Integer.parseInt(temp[1]);
+			mapY = Integer.parseInt(temp[2]);
+	        }
+		 }
+		  catch (FileNotFoundException e) {
 			System.out.println("There was a problem loading the file");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		 catch(NullPointerException e){
+			System.out.println("The save file is empty. Setting player to default location.");
+			playerName = JOptionPane.showInputDialog("Enter your name:");
+			data.setName(playerName);
+			mapX = -10;
+	        mapY = -150;
+		 }
+
 	 } //end load method
 	 
 	 public int getPlayerX(){
@@ -1133,5 +1158,14 @@ public class Judgement extends Game
 	 }
 	 public int getPlayerY(){
 		 return playerY;
-	 }	 
+	 }
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		save.saveState(mapX, mapY);
+		System.out.println("AutoSave");
+	}	 
+	public String getName(){
+		return playerName;
+	}
 } //end class

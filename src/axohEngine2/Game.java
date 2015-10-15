@@ -78,7 +78,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	protected char currentChar;
 	
 	//File variables
-	private Data data;
+	protected Data data;
 	protected Save save;
 		
 	//Time and frame rate variables
