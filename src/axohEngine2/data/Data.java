@@ -26,13 +26,16 @@ public class Data implements Serializable {
 	private int _playerX;
 	private int _playerY;
 	private String name;
-	
+	private int potions = 0;
+	private int mpotions = 0;
 	//Method used to update the private variables
-	public void update(String currentMapName, String currentOverlayName, int playerX, int playerY){
+	public void update(String currentMapName, String currentOverlayName, int playerX, int playerY, int potion, int mpotion){
 		_currentMapName = currentMapName;
 		_currentOverlayName = currentOverlayName;
 		_playerX = playerX;
 		_playerY = playerY;
+		potions = potion;
+		mpotions = mpotion;
 	}
 	
 	/***************************************************
@@ -72,5 +75,11 @@ public class Data implements Serializable {
 	public void setLocation(int x, int y){
 		_playerX = x;
 		_playerY = y;
+	}
+	public int[] getPotions(){
+		int [] temp = new int[2];
+		temp[0] = potions;
+		temp[1] = mpotions;
+		return temp;
 	}
 }

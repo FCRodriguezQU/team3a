@@ -120,8 +120,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		int winWidth = (int)screenSize.getWidth();
 		int winHeight = (int)screenSize.getHeight();
 		
-		//setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		//setUndecorated(true);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		setUndecorated(true);
 		
 		Dimension size = new Dimension(winWidth, winHeight);
 		setPreferredSize(size);
@@ -414,7 +414,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	 * @param playerY - An Int
 	 *******************************************************************************/
 	public void updateData(Map currentMap, Map currentOverlay, int playerX, int playerY) {
-		data.update(currentMap.mapName(), currentOverlay.mapName(), playerX, playerY);
+		data.update(currentMap.mapName(), currentOverlay.mapName(), playerX, playerY, data.getPotions()[0], data.getPotions()[1]);
 	}
 	
 	
@@ -585,7 +585,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 							spriteCollision(spr1, spr2, 3, 3);
 						}
 					}
-				}//end mult bounds checks
+				}//end multi bounds checks
 			}//end inner for
 		}//end outer for
 	}
