@@ -78,7 +78,9 @@ public class Judgement extends Game implements ActionListener
 	 *Fonts - Various font sizes in the Arial style for different in game text
 	 *
 	 */
-	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace, keyHealthUp, keyHealthDown, keyEscape;
+
+	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace, keyEscape,keyAttack, keyHealthUp, keyHealthDown;
+
 	Random random = new Random();
 	STATE state; 
 	OPTION option;
@@ -445,8 +447,8 @@ public class Judgement extends Game implements ActionListener
 			double topOverlap = (spr1.getBoundY(hitDir) + spr1.getBoundSize() - spr2.getBoundY(hitDir2));
 			double botOverlap = (spr2.getBoundY(hitDir2) + spr2.getBoundSize() - spr1.getBoundY(hitDir));
 			double smallestOverlap = Double.MAX_VALUE; 
-			double shiftX = 0;
-			double shiftY = 0;
+			double shiftX = 1;
+			double shiftY = 1;
 			
 			//System.out.println("Smallest Overlap : " + smallestOverlap);
 			//System.out.println("Right Overlap : " + rightOverlap);
@@ -652,6 +654,7 @@ public class Judgement extends Game implements ActionListener
 			if(mapY + ya > currentMap.getMaxY(SCREENHEIGHT) && playerY < playerSpeed && playerY > -playerSpeed) mapY += ya;
 			else playerY += ya; //down -#
 		}
+		data.setLocation(playerX, playerY);
 	}
 	
 	/**********************************************************
@@ -706,7 +709,10 @@ public class Judgement extends Game implements ActionListener
 				save.saveState(mapX, mapY);
 				System.out.println("Game saved successfully");
 				System.exit(0);
-			}			
+			}
+			if(keyAttack && playerMob.isTakenOut()){
+				playerMob.attack();
+			}
 			//No keys are pressed
 			if(!keyLeft && !keyRight && !keyUp && !keyDown) {
 				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
@@ -1013,7 +1019,7 @@ public class Judgement extends Game implements ActionListener
 	 * @param keyCode
 	 * 
 	 * Set keys for a new game action here using a switch statement
-	 * dont forget gameKeyUp
+	 * Don't forget gameKeyUp
 	 */
 	void gameKeyDown(int keyCode) {
 		switch(keyCode) {
@@ -1021,25 +1027,25 @@ public class Judgement extends Game implements ActionListener
 	            keyLeft = true;
 	            break;
 	        case KeyEvent.VK_A:
-	        	keyLeft = true;
+	        	keyAttack = true;
 	        	break;
 	        case KeyEvent.VK_RIGHT:
 	            keyRight = true;
 	            break;
 	        case KeyEvent.VK_D:
-	        	keyRight = true;
+	        	//keyRight = true;
 	        	break;
 	        case KeyEvent.VK_UP:
 	            keyUp = true;
 	            break;
 	        case KeyEvent.VK_W:
-	        	keyUp = true;
+	        	//keyUp = true;
 	        	break;
 	        case KeyEvent.VK_DOWN:
 	            keyDown = true;
 	            break;
 	        case KeyEvent.VK_S:
-	        	keyDown = true;
+	        	//keyDown = true;
 	        	break;
 	        case KeyEvent.VK_I:
 	        	keyInventory = true;
@@ -1081,7 +1087,7 @@ public class Judgement extends Game implements ActionListener
             keyLeft = false;
             break;
         case KeyEvent.VK_A:
-        	keyLeft = false;
+        	keyAttack = false;
         	break;
         case KeyEvent.VK_RIGHT:
             keyRight = false;
@@ -1133,10 +1139,18 @@ public class Judgement extends Game implements ActionListener
 	 * Inherited method
 	 * Currently if the game is running and the sword is out, the player attacks with it
 	 */
-	void gameMouseUp() {
-		if(getMouseButtons(1) == true && playerMob.isTakenOut()) {
-			playerMob.attack();
+	void gameMouseUp(double x, double y) {
+		this.setFocusable(true);
+		int temp;
+		if(x < playerMob.getXLoc()){
 		}
+		else if(x > playerMob.getYLoc()){
+			keyRight = true;
+		}
+		System.out.println("Player Location:" + playerMob.getXLoc() + "," + playerMob.getYLoc() + "\nMouseLocation:" + x + "," + y);
+		//playerMob.move();
+		keyLeft = false;
+		keyRight = false;
 	}
 
 	/**
@@ -1208,4 +1222,7 @@ public class Judgement extends Game implements ActionListener
 	public String getName(){
 		return playerName;
 	}
+	
+	
+	
 } //end class

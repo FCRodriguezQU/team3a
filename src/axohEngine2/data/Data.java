@@ -69,4 +69,8 @@ public class Data implements Serializable {
 	public String getName(){
 		return name;
 	}
+	public void setLocation(int x, int y){
+		_playerX = x;
+		_playerY = y;
+	}
 }

@@ -26,9 +26,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
@@ -101,7 +98,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	abstract void gameKeyDown(int keyCode);
     abstract void gameKeyUp(int keyCode);
     abstract void gameMouseDown();
-    abstract void gameMouseUp();
+    abstract void gameMouseUp(double d, double e);
     abstract void gameMouseMove();
 	abstract void spriteUpdate(AnimatedSprite sprite);
 	abstract void spriteDraw(AnimatedSprite sprite);
@@ -110,7 +107,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	abstract void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2);
 	 
 	/***************************************************************
-	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any othervariables
+	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any other variables
 	 * 
 	 * @param frameRate - An Int to give a desired framrate for the game
 	 * @param width - An Int defining the width of the window
@@ -123,8 +120,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		int winWidth = (int)screenSize.getWidth();
 		int winHeight = (int)screenSize.getHeight();
 		
-		setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		setUndecorated(true);
+		//setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		//setUndecorated(true);
 		
 		Dimension size = new Dimension(winWidth, winHeight);
 		setPreferredSize(size);
@@ -313,7 +310,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	    checkButtons(e);
 	    mousePos.setX(e.getX());
 	    mousePos.setY(e.getY());
-	    gameMouseUp();
+	    gameMouseUp(mousePos.X(),mousePos.Y());
 	}
 	
 	/**********************************************************************
@@ -364,6 +361,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
      * Inherited Method
 	 *********************************************************************/
 	public void mouseClicked(MouseEvent e) { 
+				
 	}
 	
 	/**********************************************************************
