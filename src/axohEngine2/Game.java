@@ -120,8 +120,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		int winWidth = (int)screenSize.getWidth();
 		int winHeight = (int)screenSize.getHeight();
 		
-		//setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		//setUndecorated(true);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		setUndecorated(true);
 		
 		Dimension size = new Dimension(winWidth, winHeight);
 		setPreferredSize(size);
