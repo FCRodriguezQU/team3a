@@ -71,7 +71,8 @@ public class InGameMenu  {
 	private int level = 1;
 	private int maxHealth = 35;
 	private int currHealth = maxHealth;
-	private int magic = 5;
+	private int maxMagic = 35;
+	private int magic = maxMagic;
 	private int attack = 8;
 	private int defense = 4;
 	private int experience;
@@ -330,6 +331,16 @@ public class InGameMenu  {
 		}
 	}
 	
+	//Stops health from going over max or below zero
+	public void fixHealth () {
+		if(currHealth>=maxHealth){
+			currHealth=maxHealth;
+		}
+		if(currHealth<=0) {
+			currHealth=0;
+		}
+	}
+	
 	//Add an int, exp to the total in the backpack
 	public void getExp(int exp) { experience += exp; }
 	
@@ -421,7 +432,11 @@ public class InGameMenu  {
 	//Getters for currently selected item number, health and magic
 	public int checkCount() { return counts[itemLocation + sectionLoc]; }
 	public int getHealth() { return currHealth; }
+	public int healthMinus() {return currHealth-=5; }
+	public int healthPlus() {return currHealth+=5; }
+	public int getMaxHealth() { return maxHealth; }
 	public int getMagic() { return magic; }
+	public int getMaxMagic() { return magic; }
 	
 	//Setter for magic stat
 	public void setmagic(int magic) { this.magic = magic; }
