@@ -98,7 +98,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	abstract void gameKeyDown(int keyCode);
     abstract void gameKeyUp(int keyCode);
     abstract void gameMouseDown();
-    abstract void gameMouseUp();
+    abstract void gameMouseUp(double d, double e);
     abstract void gameMouseMove();
 	abstract void spriteUpdate(AnimatedSprite sprite);
 	abstract void spriteDraw(AnimatedSprite sprite);
@@ -120,8 +120,8 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 		int winWidth = (int)screenSize.getWidth();
 		int winHeight = (int)screenSize.getHeight();
 		
-		setExtendedState(JFrame.MAXIMIZED_BOTH); 
-		setUndecorated(true);
+		//setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		//setUndecorated(true);
 		
 		Dimension size = new Dimension(winWidth, winHeight);
 		setPreferredSize(size);
@@ -310,7 +310,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	    checkButtons(e);
 	    mousePos.setX(e.getX());
 	    mousePos.setY(e.getY());
-	    gameMouseUp();
+	    gameMouseUp(mousePos.X(),mousePos.Y());
 	}
 	
 	/**********************************************************************
