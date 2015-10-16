@@ -341,6 +341,15 @@ public class InGameMenu  {
 		}
 	}
 	
+	public void fixMagic () {
+		if(magic>=maxMagic){
+			magic=maxMagic;
+		}
+		if(magic<=0) {
+			magic=0;
+		}
+	}
+	
 	//Add an int, exp to the total in the backpack
 	public void getExp(int exp) { experience += exp; }
 	
@@ -436,7 +445,9 @@ public class InGameMenu  {
 	public int healthPlus() {return currHealth+=5; }
 	public int getMaxHealth() { return maxHealth; }
 	public int getMagic() { return magic; }
-	public int getMaxMagic() { return magic; }
+	public int getMaxMagic() { return maxMagic; }
+	public int magicMinus() {return magic-=5; }
+	public int magicPlus() {return magic+=5; }
 	
 	//Setter for magic stat
 	public void setmagic(int magic) { this.magic = magic; }
