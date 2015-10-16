@@ -78,11 +78,14 @@ public class Judgement extends Game implements ActionListener
 	 *Fonts - Various font sizes in the Arial style for different in game text
 	 *
 	 */
-	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace, keyEscape,keyAttack;
+
+	boolean keyLeft, keyRight, keyUp, keyDown, keyInventory, keyAction, keyBack, keyEnter, keySpace, keyEscape,keyAttack, keyHealthUp, keyHealthDown;
+
 	Random random = new Random();
 	STATE state; 
 	OPTION option;
 	private Font simple = new Font("Arial", Font.PLAIN, 72);
+	private Font menuSmall = new Font("Arial", Font.BOLD, 32);
 	private Font bold = new Font("Arial", Font.BOLD, 72);
 	private Font bigBold = new Font("Arial", Font.BOLD, 96);
 	
@@ -344,12 +347,32 @@ public class Judgement extends Game implements ActionListener
 			currentMap.render(this, g2d, mapX, mapY);
 			currentOverlay.render(this, g2d, mapX, mapY);
 			playerMob.renderMob(CENTERX - playerX, CENTERY - playerY);
+	        inMenu.fixHealth();
+	        g2d.setFont(menuSmall);
 			g2d.setColor(Color.RED);
-			g2d.drawString("Health: " + inMenu.getHealth(), CENTERX - 780, CENTERY - 350);
+			g2d.fillRect(CENTERX - 850, CENTERY - 520, inMenu.getMaxHealth()*5, 30);
+			g2d.setColor(Color.GREEN);
+			g2d.fillRect(CENTERX - 850, CENTERY - 520, inMenu.getHealth()*5, 30);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("HP: "+inMenu.getHealth(), CENTERX - 908, CENTERY - 492);
+			g2d.drawString("/"+inMenu.getMaxHealth(), CENTERX - 810, CENTERY - 492);
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("HP: "+inMenu.getHealth(), CENTERX - 910, CENTERY - 494);
+			g2d.drawString("/"+inMenu.getMaxHealth(), CENTERX - 812, CENTERY - 494);
+			g2d.setColor(Color.RED);
+			g2d.fillRect(CENTERX - 785, CENTERY - 475, inMenu.getMaxMagic()*5, 30);
 			g2d.setColor(Color.BLUE);
-			g2d.drawString("Magic: " + inMenu.getMagic(), CENTERX - 280, CENTERY - 350);
-			g2d.setColor(Color.YELLOW);
-			g2d.drawString("Player: " + playerName, CENTERX + 200, CENTERY - 350);
+			g2d.fillRect(CENTERX - 785, CENTERY - 475, inMenu.getMagic()*5, 30);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("MP: "+inMenu.getMagic(), CENTERX - 845, CENTERY - 447);
+			g2d.drawString("/"+inMenu.getMaxMagic(), CENTERX - 743, CENTERY - 447);
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("MP: "+inMenu.getMagic(), CENTERX - 847, CENTERY - 449);
+			g2d.drawString("/"+inMenu.getMaxMagic(), CENTERX - 745, CENTERY - 449);
+			g2d.setColor(Color.BLACK);
+			g2d.drawString("Player: " + playerName, CENTERX - 898, CENTERY +502);
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("Player: " + playerName, CENTERX - 900, CENTERY +500);
 		} 
 		if(state == STATE.INGAMEMENU)
 		{
@@ -703,6 +726,20 @@ public class Judgement extends Game implements ActionListener
 				inputWait = 10;
 			}
 			
+			//1 (+5 Health debug command)
+			if(keyHealthUp) {
+				inMenu.healthPlus();
+				inputWait = 10;
+				keyHealthUp = false;
+			}
+			
+			//2 (-5 Health debug command)
+			if(keyHealthDown) {
+				inMenu.healthMinus();
+				inputWait = 10;
+				keyHealthDown = false;
+			}
+			
 			//SpaceBar(action button)
 			if(keySpace) {
 				playerMob.inOutItem();
@@ -1026,6 +1063,12 @@ public class Judgement extends Game implements ActionListener
 	        	break;
 	        case KeyEvent.VK_ESCAPE:
 	        	keyEscape = true;
+	        	break;
+	        case KeyEvent.VK_1:
+	        	keyHealthUp = true;
+	        	break;
+	        case KeyEvent.VK_2:
+	        	keyHealthDown = true;
 	        	break;
         }
 	}
