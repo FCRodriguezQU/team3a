@@ -367,7 +367,7 @@ public class Judgement extends Game implements ActionListener
 		//Render save time specific writing
 		if(option == OPTION.SAVE)
 		{
-			save.saveState(mapX,mapY);
+			save.saveState(mapX,mapY,inMenu.getHealth());
 			g2d.setFont(new Font("TimesRoman", Font.BOLD, 110));
 			drawString(g2d, (playerName + "'s game\n was saved." ), SCREENWIDTH/4*2, 450);
 		}
@@ -380,7 +380,6 @@ public class Judgement extends Game implements ActionListener
 	 * Actions that need to be done during these times can be added here.
 	 ******************************************************************/
 	void gameShutDown() {	
-		save.saveState(mapX, mapY);
 	}
 
 	void spriteUpdate(AnimatedSprite sprite) 
@@ -683,7 +682,7 @@ public class Judgement extends Game implements ActionListener
 				playerMob.updatePlayer(keyLeft, keyRight, keyUp, keyDown);
 			}
 			if(keyEscape){
-				save.saveState(mapX, mapY);
+				save.saveState(mapX, mapY,inMenu.getHealth());
 				System.out.println("Game saved successfully");
 				System.exit(0);
 			}
@@ -735,7 +734,7 @@ public class Judgement extends Game implements ActionListener
 					setGameState(STATE.GAME);
 				}
 				if(keyEscape){
-					save.saveState(mapX, mapY);
+					save.saveState(mapX, mapY,inMenu.getHealth());
 					System.exit(0);
 				}
 			}//end option none
@@ -927,7 +926,7 @@ public class Judgement extends Game implements ActionListener
 			if(option == OPTION.SAVE){
 				//Key enter(Save the file)
 				if(keyEnter){
-					save.saveState(mapX,mapY);
+					save.saveState(mapX,mapY,inMenu.getHealth());
 					inputWait = 20;
 					wait = 200;
 					waitOn = true;
@@ -1173,7 +1172,7 @@ public class Judgement extends Game implements ActionListener
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		save.saveState(mapX, mapY);
+		save.saveState(mapX, mapY,inMenu.getHealth());
 		System.out.println("AutoSave");
 	}	 
 	public String getName(){

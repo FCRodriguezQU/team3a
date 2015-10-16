@@ -32,11 +32,11 @@ public class Save {
 		game = g;
 		data = d;
 	}
-	public void saveState(int x, int y){
+	public void saveState(int x, int y, int h){
 		try {
 			File file = new File("Save.csv");
 			PrintWriter write = new PrintWriter(file);
-			write.println(data.getName() + "," + x + "," + y);
+			write.println(data.getName() + "," + x + "," + y + "," + h);
 			write.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("There was trouble saving the game.");

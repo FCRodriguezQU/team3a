@@ -59,7 +59,7 @@ public class InGameMenu  {
 	//totalEquipment - same as totalItems but for equipment types
 	private LinkedList<Item> items;
 	private LinkedList<Item> equipment;
-	private int[] counts;
+	public int[] counts;
 	private Item[] shownEquipment;
 	private Item[] shownItems;
 	private int itemLocation;
@@ -77,6 +77,8 @@ public class InGameMenu  {
 	private int experience;
 	private int nextLevel = 20;
 	private int nextExp = 25;
+	public int potions = 0;
+	public int mpotions = 0;
 	
 	
 	/********************************************************************************************
@@ -183,13 +185,19 @@ public class InGameMenu  {
 	
 	//Each new item and equipment for the game needs to be added to what needs to be counted
 	//Reference blue code block above methods
-	private void countItems() {
+	public void countItems() {
 		for(int i = 0; i < counts.length; i++){
 			counts[i] = 0;
 		}
 		for(int i = 0; i < items.size(); i++){ //Add items to be counted here
-			if(items.get(i).getName().equals("Potion")) counts[0]++;
-			if(items.get(i).getName().equals("Mega Potion")) counts[1]++;
+			if(items.get(i).getName().equals("Potion")){
+				counts[0]++;
+				potions++;
+			}
+			if(items.get(i).getName().equals("Mega Potion")){
+				counts[1]++;
+				mpotions++;
+			}
 		}
 		for(int i = 0; i < equipment.size(); i++){ //add equipment to be counted here.
 			
@@ -425,4 +433,11 @@ public class InGameMenu  {
 	
 	//Setter for magic stat
 	public void setmagic(int magic) { this.magic = magic; }
+	
+	public int getPotions(){
+		return potions;
+	}
+	public int getMPotion(){
+		return mpotions;
+	}
 }
