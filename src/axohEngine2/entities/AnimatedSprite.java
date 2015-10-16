@@ -154,7 +154,7 @@ public class AnimatedSprite extends Sprite {
      * @param spriteNumRight - Starting frame for this animation
      * @param spriteNumUp - Starting frame for this animation
      * @param spriteNumDown - Starting frame for this animation
-     * @param frames - Total frames in the aniamtions
+     * @param frames - Total frames in the animations
      * @param delay - Delay between frames for these animations
      ****************************************************************/
     public void setMoveAnim(int spriteNumLeft, int spriteNumRight, int spriteNumUp, int spriteNumDown, int frames, int delay) {

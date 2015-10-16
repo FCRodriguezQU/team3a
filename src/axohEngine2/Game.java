@@ -26,9 +26,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
@@ -110,7 +107,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
 	abstract void tileCollision(AnimatedSprite spr, Tile tile, int hitDir, int hitDir2);
 	 
 	/***************************************************************
-	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any othervariables
+	 * Constructor - Initialize the frame, the backBuffer, the game lists, and any other variables
 	 * 
 	 * @param frameRate - An Int to give a desired framrate for the game
 	 * @param width - An Int defining the width of the window
@@ -364,6 +361,7 @@ public abstract class Game extends JFrame implements Runnable, KeyListener, Mous
      * Inherited Method
 	 *********************************************************************/
 	public void mouseClicked(MouseEvent e) { 
+				
 	}
 	
 	/**********************************************************************
