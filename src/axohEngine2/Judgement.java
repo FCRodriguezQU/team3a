@@ -349,7 +349,11 @@ public class Judgement extends Game implements ActionListener
 			playerMob.renderMob(CENTERX - playerX, CENTERY - playerY);
 	        inMenu.fixHealth();
 	        inMenu.fixMagic();
+	        Color DARKBLUE = new Color (10, 10, 60);
+	        Color LIGHTBLUE = new Color (19, 60, 217);
 	        g2d.setFont(menuSmall);
+			g2d.setColor(Color.BLACK);
+			g2d.fillRect(CENTERX - 846, CENTERY - 496, inMenu.getMaxHealth()*5, 30);
 			g2d.setColor(Color.RED);
 			g2d.fillRect(CENTERX - 850, CENTERY - 500, inMenu.getMaxHealth()*5, 30);
 			g2d.setColor(Color.GREEN);
@@ -360,9 +364,11 @@ public class Judgement extends Game implements ActionListener
 			g2d.setColor(Color.WHITE);
 			g2d.drawString("HP: "+inMenu.getHealth(), CENTERX - 910, CENTERY - 474);
 			g2d.drawString("/"+inMenu.getMaxHealth(), CENTERX - 812, CENTERY - 474);
-			g2d.setColor(Color.RED);
+			g2d.setColor(Color.BLACK);
+			g2d.fillRect(CENTERX - 781, CENTERY - 451, inMenu.getMaxMagic()*5, 30);
+			g2d.setColor(DARKBLUE);
 			g2d.fillRect(CENTERX - 785, CENTERY - 455, inMenu.getMaxMagic()*5, 30);
-			g2d.setColor(Color.BLUE);
+			g2d.setColor(LIGHTBLUE);
 			g2d.fillRect(CENTERX - 785, CENTERY - 455, inMenu.getMagic()*5, 30);
 			g2d.setColor(Color.BLACK);
 			g2d.drawString("MP: "+inMenu.getMagic(), CENTERX - 845, CENTERY - 427);
@@ -730,28 +736,28 @@ public class Judgement extends Game implements ActionListener
 			//1 (+5 Health debug command)
 			if(keyHealthUp) {
 				inMenu.healthPlus();
-				inputWait = 10;
+				//inputWait = 1;
 				keyHealthUp = false;
 			}
 			
 			//2 (-5 Health debug command)
 			if(keyHealthDown) {
 				inMenu.healthMinus();
-				inputWait = 10;
+				//inputWait = 1;
 				keyHealthDown = false;
 			}
 			
 			//3 (-5 Magic debug command)
 			if(keyMagicUp) {
 				inMenu.magicPlus();
-				inputWait = 10;
+				//inputWait = 1;
 				keyMagicUp = false;
 			}
 			
 			//4 (-5 Magic debug command)
 			if(keyMagicDown) {
 				inMenu.magicMinus();
-				inputWait = 10;
+				//inputWait = 1;
 				keyMagicDown = false;
 			}
 			
@@ -1079,16 +1085,16 @@ public class Judgement extends Game implements ActionListener
 	        case KeyEvent.VK_ESCAPE:
 	        	keyEscape = true;
 	        	break;
-	        case KeyEvent.VK_1:
+	        case KeyEvent.VK_2:
 	        	keyHealthUp = true;
 	        	break;
-	        case KeyEvent.VK_2:
+	        case KeyEvent.VK_1:
 	        	keyHealthDown = true;
 	        	break;
-	        case KeyEvent.VK_3:
+	        case KeyEvent.VK_4:
 	        	keyMagicUp = true;
 	        	break;
-	        case KeyEvent.VK_4:
+	        case KeyEvent.VK_3:
 	        	keyMagicDown = true;
 	        	break;
         }

@@ -449,13 +449,13 @@ public class InGameMenu  {
 	//Getters for currently selected item number, health and magic
 	public int checkCount() { return counts[itemLocation + sectionLoc]; }
 	public int getHealth() { return currHealth; }
-	public int healthMinus() {return currHealth-=5; }
-	public int healthPlus() {return currHealth+=5; }
+	public int healthMinus() {return currHealth-=1; }
+	public int healthPlus() {return currHealth+=1; }
 	public int getMaxHealth() { return maxHealth; }
 	public int getMagic() { return magic; }
 	public int getMaxMagic() { return maxMagic; }
-	public int magicMinus() {return magic-=5; }
-	public int magicPlus() {return magic+=5; }
+	public int magicMinus() {return magic-=1; }
+	public int magicPlus() {return magic+=1; }
 	
 	//Setter for magic stat
 	public void setmagic(int magic) { this.magic = magic; }
