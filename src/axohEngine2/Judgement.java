@@ -1096,8 +1096,18 @@ public class Judgement extends Game implements ActionListener
 	 * Inherited method
 	 * Currently if the game is running and the sword is out, the player attacks with it
 	 */
-	void gameMouseUp() {
-		
+	void gameMouseUp(double x, double y) {
+		this.setFocusable(true);
+		int temp;
+		if(x < playerMob.getXLoc()){
+		}
+		else if(x > playerMob.getYLoc()){
+			keyRight = true;
+		}
+		System.out.println("Player Location:" + playerMob.getXLoc() + "," + playerMob.getYLoc() + "\nMouseLocation:" + x + "," + y);
+		//playerMob.move();
+		keyLeft = false;
+		keyRight = false;
 	}
 
 	/**
