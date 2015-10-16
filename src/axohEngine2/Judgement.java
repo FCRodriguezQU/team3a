@@ -5,7 +5,7 @@
  * 
  * 
  * Title: Judgement(The Game)
- * Description: This class extends 'Game.java' in order to run a 2D game with specificly defined
+ * Description: This class extends 'Game.java' in order to run a 2D game with specifically defined
  *  sprites, animatons, and actions.
  *  
  * 
